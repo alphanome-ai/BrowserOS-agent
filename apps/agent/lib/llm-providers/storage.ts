@@ -6,7 +6,7 @@ import type { LlmProviderConfig, LlmProvidersBackup } from './types'
 import { uploadLlmProvidersToGraphql } from './uploadLlmProvidersToGraphql'
 
 /** Default provider ID constant */
-export const DEFAULT_PROVIDER_ID = 'browseros'
+export const DEFAULT_PROVIDER_ID = 'fouwser'
 
 /** Storage key for LLM providers array */
 export const providersStorage = storage.defineItem<LlmProviderConfig[]>(
@@ -77,10 +77,10 @@ export function createDefaultBrowserOSProvider(): LlmProviderConfig {
   const timestamp = Date.now()
   return {
     id: DEFAULT_PROVIDER_ID,
-    type: 'browseros',
-    name: 'BrowserOS',
-    baseUrl: 'https://api.browseros.com/v1',
-    modelId: 'browseros-auto',
+    type: 'fouwser',
+    name: 'Fouwser',
+    baseUrl: 'https://api.fouwser.com/v1',
+    modelId: 'fouwser-auto',
     supportsImages: true,
     contextWindow: 200000,
     temperature: 0.2,

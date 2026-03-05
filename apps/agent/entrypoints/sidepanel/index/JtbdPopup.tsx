@@ -1,6 +1,7 @@
 import { MessageSquareHeart, X } from 'lucide-react'
 import type { FC } from 'react'
 import { Message, MessageContent } from '@/components/ai-elements/message'
+
 import { Button } from '@/components/ui/button'
 
 interface JtbdPopupProps {
@@ -24,7 +25,7 @@ export const JtbdPopup: FC<JtbdPopupProps> = ({ onTakeSurvey, onDismiss }) => {
           <div className="flex items-start gap-3 pr-6">
             <MessageSquareHeart className="h-5 w-5 shrink-0 text-primary" />
             <div>
-              <p className="font-medium text-sm">Help us improve BrowserOS!</p>
+              <p className="font-medium text-sm">Help us improve Fouwser!</p>
               <p className="mt-1 text-muted-foreground text-xs">
                 Take a quick 3-minute survey.
               </p>

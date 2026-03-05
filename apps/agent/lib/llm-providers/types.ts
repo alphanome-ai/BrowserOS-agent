@@ -12,7 +12,7 @@ export type ProviderType =
   | 'ollama'
   | 'lmstudio'
   | 'bedrock'
-// | 'browseros'
+  | 'fouwser'
 
 /**
  * LLM Provider configuration

@@ -6,8 +6,8 @@ import { getBrowserOSAdapter } from '@/lib/browseros/adapter'
 import { BROWSEROS_PREFS } from '@/lib/browseros/prefs'
 
 export const ToolbarSettingsCard: FC = () => {
-  // const [showLlmChat, setShowLlmChat] = useState(false)
-  // const [showLlmHub, setShowLlmHub] = useState(false)
+  const [_showLlmChat, setShowLlmChat] = useState(false)
+  const [_showLlmHub, setShowLlmHub] = useState(false)
   const [showToolbarLabels, setShowToolbarLabels] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 
