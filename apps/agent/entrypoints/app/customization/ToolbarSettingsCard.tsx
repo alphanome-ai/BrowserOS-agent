@@ -6,8 +6,8 @@ import { getBrowserOSAdapter } from '@/lib/browseros/adapter'
 import { BROWSEROS_PREFS } from '@/lib/browseros/prefs'
 
 export const ToolbarSettingsCard: FC = () => {
-  const [showLlmChat, setShowLlmChat] = useState(true)
-  const [showLlmHub, setShowLlmHub] = useState(true)
+  // const [showLlmChat, setShowLlmChat] = useState(false)
+  // const [showLlmHub, setShowLlmHub] = useState(false)
   const [showToolbarLabels, setShowToolbarLabels] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -52,7 +52,7 @@ export const ToolbarSettingsCard: FC = () => {
       <h3 className="mb-4 font-semibold text-lg">Toolbar Settings</h3>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <Label htmlFor="show-llm-chat" className="font-medium text-sm">
               Show Chat Button
@@ -73,9 +73,9 @@ export const ToolbarSettingsCard: FC = () => {
             }
             disabled={isLoading}
           />
-        </div>
+        </div> */}
 
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <Label htmlFor="show-llm-hub" className="font-medium text-sm">
               Show Hub Button
@@ -92,7 +92,7 @@ export const ToolbarSettingsCard: FC = () => {
             }
             disabled={isLoading}
           />
-        </div>
+        </div> */}
 
         <div className="flex items-center justify-between border-border border-t pt-4">
           <div className="space-y-0.5">

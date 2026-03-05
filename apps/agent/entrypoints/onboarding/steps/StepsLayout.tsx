@@ -57,14 +57,14 @@ export const StepsLayout = () => {
                   <div className="relative z-10 flex flex-col items-center gap-2">
                     <div className="relative">
                       {isActive && (
-                        <div className="absolute inset-0 animate-ping rounded-full bg-[var(--accent-orange)] opacity-30" />
+                        <div className="absolute inset-0 animate-ping rounded-full bg-primary opacity-30" />
                       )}
                       <div
                         className={`relative flex h-8 w-8 items-center justify-center rounded-full font-semibold text-sm transition-all duration-500 ${
                           isCompleted
-                            ? 'bg-[var(--accent-orange)] text-white'
+                            ? 'bg-primary text-white'
                             : isActive
-                              ? 'bg-[var(--accent-orange)] text-white ring-4 ring-[var(--accent-orange)]/20'
+                              ? 'bg-primary text-white ring-4 ring-[var(--accent-orange)]/20'
                               : 'border border-border bg-muted text-muted-foreground'
                         }`}
                       >

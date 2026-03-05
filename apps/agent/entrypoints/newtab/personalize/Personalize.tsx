@@ -17,7 +17,7 @@ const sections = [
   {
     key: 'aboutYou' as const,
     title: 'Add more info about you',
-    description: 'Help BrowserOS understand who you are',
+    description: 'Help Fouwser understand who you are',
   },
   {
     key: 'expectations' as const,
@@ -66,7 +66,7 @@ export const Personalize = () => {
           value={personalization}
           autoFocus
           onChange={(e) => setPersonalization(e.target.value)}
-          placeholder="Tell BrowserOS about yourself... (Supports Markdown)"
+          placeholder="Tell Fouwser about yourself... (Supports Markdown)"
           className="styled-scrollbar h-96 resize-none rounded-2xl border-2 border-border/50 bg-card px-4 py-3 transition-transform placeholder:text-muted-foreground focus:border-[var(--accent-orange)]/30 focus:ring-4 focus:ring-[var(--accent-orange)]/10"
         />
         <p className="text-muted-foreground text-xs">

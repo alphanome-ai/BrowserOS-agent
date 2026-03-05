@@ -45,7 +45,7 @@ const SuggestionItemRenderer: FC<{
     case 'ai-tab':
       return (
         <li className={baseClassName} {...getItemProps({ item, index })}>
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--accent-orange)]/10 transition-colors group-hover:bg-[var(--accent-orange)]/20">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
             <item.icon className="h-4 w-4 text-[var(--accent-orange)]" />
           </div>
           <div className="flex-1 text-left">
@@ -65,7 +65,7 @@ const SuggestionItemRenderer: FC<{
       return (
         <li className={baseClassName} {...getItemProps({ item, index })}>
           <Sparkles className="h-4 w-4 text-muted-foreground" />
-          <span className="font-semibold">Ask BrowserOS:</span>
+          <span className="font-semibold">Ask Fouwser:</span>
           {item.message || 'Type a message...'}
         </li>
       )

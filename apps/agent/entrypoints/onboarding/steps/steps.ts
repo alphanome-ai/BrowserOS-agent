@@ -1,5 +1,5 @@
 import { StepOne } from './StepOne'
-import { StepTwo } from './StepTwo'
+// import { StepTwo } from './StepTwo'
 
 export const steps = [
   {
@@ -7,9 +7,9 @@ export const steps = [
     name: 'About You',
     component: StepOne,
   },
-  {
-    id: 2,
-    name: 'Sign In',
-    component: StepTwo,
-  },
+  // {
+  //   id: 2,
+  //   name: 'Sign In',
+  //   component: StepTwo,
+  // },
 ]
