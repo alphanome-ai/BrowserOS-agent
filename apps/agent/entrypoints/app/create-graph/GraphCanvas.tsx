@@ -393,7 +393,7 @@ export const GraphCanvas: FC<GraphCanvasProps> = ({
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <img src={ProductLogo} alt="BrowserOS" className="h-8 w-8 shrink-0" />
+          <img src={ProductLogo} alt="Fouwser" className="h-8 w-8 shrink-0" />
           {isEditingName ? (
             <input
               type="text"

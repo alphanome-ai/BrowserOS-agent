@@ -7,8 +7,8 @@ import { Capabilities, Feature } from '@/lib/browseros/capabilities'
 import { BROWSEROS_PREFS } from '@/lib/browseros/prefs'
 
 export const ToolbarSettingsCard: FC = () => {
-  // const [showLlmChat, setShowLlmChat] = useState(false)
-  // const [showLlmHub, setShowLlmHub] = useState(false)
+  const [_showLlmChat, setShowLlmChat] = useState(false)
+  const [_showLlmHub, setShowLlmHub] = useState(false)
   const [showToolbarLabels, setShowToolbarLabels] = useState(true)
   const [verticalTabsEnabled, setVerticalTabsEnabled] = useState(true)
   const [supportsVerticalTabs, setSupportsVerticalTabs] = useState(false)

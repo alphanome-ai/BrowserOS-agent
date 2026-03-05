@@ -7,9 +7,9 @@ import type { LlmProviderConfig, LlmProvidersBackup } from './types'
 import { uploadLlmProvidersToGraphql } from './uploadLlmProvidersToGraphql'
 
 /** Default provider ID constant */
-export const DEFAULT_PROVIDER_ID = 'browseros'
-const DEFAULT_PROVIDER_NAME = 'BrowserOS'
-const KIMI_LAUNCH_PROVIDER_NAME = 'Kimi K2.5'
+export const DEFAULT_PROVIDER_ID = 'fouwser'
+const DEFAULT_PROVIDER_NAME = 'Fouwser'
+const KIMI_LAUNCH_PROVIDER_NAME = '' // Kimi K2.5
 
 /** Storage key for LLM providers array */
 export const providersStorage = storage.defineItem<LlmProviderConfig[]>(
@@ -24,7 +24,7 @@ export const providersStorage = storage.defineItem<LlmProviderConfig[]>(
         return providers.map((provider) => {
           if (
             provider.id === DEFAULT_PROVIDER_ID &&
-            provider.type === 'browseros'
+            provider.type === 'fouwser'
           ) {
             return { ...provider, contextWindow: 200000 }
           }
@@ -108,10 +108,10 @@ export function createDefaultBrowserOSProvider(): LlmProviderConfig {
   const timestamp = Date.now()
   return {
     id: DEFAULT_PROVIDER_ID,
-    type: 'browseros',
+    type: 'fouwser',
     name: getBuiltInProviderName(),
     baseUrl: 'https://api.browseros.com/v1',
-    modelId: 'browseros-auto',
+    modelId: 'fouwser-auto',
     supportsImages: true,
     contextWindow: 200000,
     temperature: 0.2,
@@ -139,7 +139,7 @@ function normalizeProvidersForLaunch(
   return providers.map((provider) => {
     if (
       provider.id === DEFAULT_PROVIDER_ID &&
-      provider.type === 'browseros' &&
+      provider.type === 'fouwser' &&
       provider.name !== builtInProviderName
     ) {
       return {
