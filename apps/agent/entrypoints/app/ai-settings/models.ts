@@ -15,6 +15,7 @@ export interface ModelsData {
   anthropic: ModelInfo[]
   openai: ModelInfo[]
   'openai-compatible': ModelInfo[]
+  'openai-compatible-responses': ModelInfo[]
   google: ModelInfo[]
   openrouter: ModelInfo[]
   azure: ModelInfo[]
@@ -52,6 +53,7 @@ export const MODELS_DATA: ModelsData = {
     { modelId: 'gpt-4o-mini', contextLength: 128000 },
   ],
   'openai-compatible': [],
+  'openai-compatible-responses': [],
   google: [
     { modelId: 'gemini-3-pro-preview', contextLength: 1048576 },
     { modelId: 'gemini-3-flash-preview', contextLength: 1048576 },

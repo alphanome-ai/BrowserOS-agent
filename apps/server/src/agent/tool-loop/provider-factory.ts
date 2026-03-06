@@ -136,6 +136,20 @@ function createOpenAICompatibleFactory(
   })
 }
 
+function createOpenAICompatibleResponsesFactory(
+  config: ResolvedAgentConfig,
+): (modelId: string) => unknown {
+  if (!config.baseUrl) {
+    throw new Error('OpenAI-compatible-responses provider requires baseUrl')
+  }
+  const provider = createOpenAI({
+    name: 'openai-compatible-responses',
+    baseURL: config.baseUrl,
+    ...(config.apiKey && { apiKey: config.apiKey }),
+  })
+  return (modelId: string) => provider.responses(modelId)
+}
+
 const PROVIDER_FACTORIES: Record<string, ProviderFactory> = {
   [LLM_PROVIDERS.ANTHROPIC]: createAnthropicFactory,
   [LLM_PROVIDERS.OPENAI]: createOpenAIFactory,
@@ -147,6 +161,8 @@ const PROVIDER_FACTORIES: Record<string, ProviderFactory> = {
   [LLM_PROVIDERS.BEDROCK]: createBedrockFactory,
   [LLM_PROVIDERS.BROWSEROS]: createBrowserOSFactory,
   [LLM_PROVIDERS.OPENAI_COMPATIBLE]: createOpenAICompatibleFactory,
+  [LLM_PROVIDERS.OPENAI_COMPATIBLE_RESPONSES]:
+    createOpenAICompatibleResponsesFactory,
 }
 
 export function createLanguageModel(

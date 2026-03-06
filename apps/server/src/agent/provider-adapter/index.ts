@@ -160,6 +160,20 @@ function createOpenAICompatibleFactory(
   })
 }
 
+function createOpenAICompatibleResponsesFactory(
+  config: VercelAIConfig,
+): (modelId: string) => unknown {
+  if (!config.baseUrl) {
+    throw new Error('OpenAI-compatible-responses provider requires baseUrl')
+  }
+  const provider = createOpenAI({
+    name: 'openai-compatible-responses',
+    baseURL: config.baseUrl,
+    ...(config.apiKey && { apiKey: config.apiKey }),
+  })
+  return (modelId: string) => provider.responses(modelId)
+}
+
 const PROVIDER_FACTORIES: Record<string, ProviderFactory> = {
   [AIProvider.ANTHROPIC]: createAnthropicFactory,
   [AIProvider.OPENAI]: createOpenAIFactory,
@@ -171,6 +185,8 @@ const PROVIDER_FACTORIES: Record<string, ProviderFactory> = {
   [AIProvider.BEDROCK]: createBedrockFactory,
   [AIProvider.BROWSEROS]: createBrowserOSFactory,
   [AIProvider.OPENAI_COMPATIBLE]: createOpenAICompatibleFactory,
+  [AIProvider.OPENAI_COMPATIBLE_RESPONSES]:
+    createOpenAICompatibleResponsesFactory,
 }
 
 /**
