@@ -27,7 +27,10 @@ export const ProviderTemplatesSection: FC<ProviderTemplatesSectionProps> = ({
 
   const filteredTemplates = providerTemplates.filter((template) => {
     if (template.id === 'moonshot') return kimiLaunch
-    if (template.id === 'openai-compatible') {
+    if (
+      template.id === 'openai-compatible' ||
+      template.id === 'openai-compatible-responses'
+    ) {
       return supports(Feature.OPENAI_COMPATIBLE_SUPPORT)
     }
     return true

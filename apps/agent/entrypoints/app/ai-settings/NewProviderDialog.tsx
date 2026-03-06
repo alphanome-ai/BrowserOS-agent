@@ -54,13 +54,14 @@ const providerTypeEnum = z.enum([
   'anthropic',
   'openai',
   'openai-compatible',
+  'openai-compatible-responses',
   'google',
   'openrouter',
   'azure',
   'ollama',
   'lmstudio',
   'bedrock',
-  'browseros',
+  // 'fouwser',
 ])
 
 /**
@@ -184,7 +185,10 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
   const filteredProviderTypeOptions = providerTypeOptions.filter((opt) => {
     if (opt.value === 'moonshot')
       return kimiLaunch || initialValues?.type === 'moonshot'
-    if (opt.value === 'openai-compatible') {
+    if (
+      opt.value === 'openai-compatible' ||
+      opt.value === 'openai-compatible-responses'
+    ) {
       return supports(Feature.OPENAI_COMPATIBLE_SUPPORT)
     }
     return true

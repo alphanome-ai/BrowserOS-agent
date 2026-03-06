@@ -38,12 +38,20 @@ export const providerTemplates: ProviderTemplate[] = [
     supportsImages: true,
     contextWindow: 128000,
     apiKeyUrl: 'https://platform.openai.com/api-keys',
-    setupGuideUrl:
-      'https://docs.browseros.com/features/bring-your-own-llm#openai',
+    // setupGuideUrl:
+    //   'https://docs.browseros.com/features/bring-your-own-llm#openai',
   },
   {
     id: 'openai-compatible',
     name: 'OpenAI Compatible',
+    defaultBaseUrl: '',
+    defaultModelId: '',
+    supportsImages: true,
+    contextWindow: 128000,
+  },
+  {
+    id: 'openai-compatible-responses',
+    name: 'OpenAI Compatible (Responses API)',
     defaultBaseUrl: '',
     defaultModelId: '',
     supportsImages: true,
@@ -57,8 +65,8 @@ export const providerTemplates: ProviderTemplate[] = [
     supportsImages: true,
     contextWindow: 200000,
     apiKeyUrl: 'https://console.anthropic.com/settings/keys',
-    setupGuideUrl:
-      'https://docs.browseros.com/features/bring-your-own-llm#claude',
+    // setupGuideUrl:
+    //   'https://docs.browseros.com/features/bring-your-own-llm#claude',
   },
   {
     id: 'google',
@@ -68,8 +76,8 @@ export const providerTemplates: ProviderTemplate[] = [
     supportsImages: true,
     contextWindow: 1000000,
     apiKeyUrl: 'https://aistudio.google.com/app/apikey',
-    setupGuideUrl:
-      'https://docs.browseros.com/features/bring-your-own-llm#gemini',
+    // setupGuideUrl:
+    //   'https://docs.browseros.com/features/bring-your-own-llm#gemini',
   },
   {
     id: 'ollama',
@@ -78,8 +86,8 @@ export const providerTemplates: ProviderTemplate[] = [
     defaultModelId: 'llama3.2',
     supportsImages: false,
     contextWindow: 128000,
-    setupGuideUrl:
-      'https://docs.browseros.com/features/bring-your-own-llm#ollama',
+    // setupGuideUrl:
+    //   'https://docs.browseros.com/features/bring-your-own-llm#ollama',
   },
   {
     id: 'openrouter',
@@ -89,8 +97,8 @@ export const providerTemplates: ProviderTemplate[] = [
     supportsImages: true,
     contextWindow: 128000,
     apiKeyUrl: 'https://openrouter.ai/keys',
-    setupGuideUrl:
-      'https://docs.browseros.com/features/bring-your-own-llm#openrouter',
+    // setupGuideUrl:
+    //   'https://docs.browseros.com/features/bring-your-own-llm#openrouter',
   },
   {
     id: 'lmstudio',
@@ -99,8 +107,8 @@ export const providerTemplates: ProviderTemplate[] = [
     defaultModelId: 'local-model',
     supportsImages: false,
     contextWindow: 32000,
-    setupGuideUrl:
-      'https://docs.browseros.com/features/bring-your-own-llm#lmstudio',
+    // setupGuideUrl:
+    //   'https://docs.browseros.com/features/bring-your-own-llm#lmstudio',
   },
   {
     id: 'azure',
@@ -119,8 +127,8 @@ export const providerTemplates: ProviderTemplate[] = [
     defaultModelId: '',
     supportsImages: true,
     contextWindow: 200000,
-    setupGuideUrl:
-      'https://docs.aws.amazon.com/bedrock/latest/userguide/getting-started.html',
+    // setupGuideUrl:
+    //   'https://docs.aws.amazon.com/bedrock/latest/userguide/getting-started.html',
   },
 ]
 
@@ -133,13 +141,17 @@ export const providerTypeOptions: { value: ProviderType; label: string }[] = [
   { value: 'anthropic', label: 'Anthropic' },
   { value: 'openai', label: 'OpenAI' },
   { value: 'openai-compatible', label: 'OpenAI Compatible' },
+  {
+    value: 'openai-compatible-responses',
+    label: 'OpenAI Compatible (Responses API)',
+  },
   { value: 'google', label: 'Gemini' },
   { value: 'openrouter', label: 'OpenRouter' },
   { value: 'azure', label: 'Azure' },
   { value: 'ollama', label: 'Ollama' },
   { value: 'lmstudio', label: 'LM Studio' },
   { value: 'bedrock', label: 'AWS Bedrock' },
-  { value: 'browseros', label: 'BrowserOS' },
+  // { value: 'fouwser', label: 'Fouwser' },
 ]
 
 /**
@@ -161,13 +173,14 @@ export const DEFAULT_BASE_URLS: Record<ProviderType, string> = {
   anthropic: 'https://api.anthropic.com/v1',
   openai: 'https://api.openai.com/v1',
   'openai-compatible': '',
+  'openai-compatible-responses': '',
   google: 'https://generativelanguage.googleapis.com/v1beta',
   openrouter: 'https://openrouter.ai/api/v1',
   azure: '',
   ollama: 'http://localhost:11434/v1',
   lmstudio: 'http://localhost:1234/v1',
   bedrock: '',
-  browseros: '',
+  // fouwser: '',
 }
 
 /**

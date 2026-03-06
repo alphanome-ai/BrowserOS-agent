@@ -6,15 +6,15 @@ export type ProviderType =
   | 'anthropic'
   | 'openai'
   | 'openai-compatible'
+  | 'openai-compatible-responses'
   | 'google'
   | 'openrouter'
   | 'azure'
   | 'ollama'
   | 'lmstudio'
   | 'bedrock'
-  | 'fouwser'
+// | 'fouwser'
   | 'moonshot'
-  | 'browseros'
 
 /**
  * LLM Provider configuration

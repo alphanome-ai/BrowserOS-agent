@@ -24,13 +24,14 @@ const providerIconMap: Record<ProviderType, IconComponent | null> = {
   anthropic: Anthropic,
   openai: OpenAI,
   'openai-compatible': OpenAI,
+  'openai-compatible-responses': OpenAI,
   google: Gemini,
   openrouter: OpenRouter,
   azure: Azure,
   ollama: Ollama,
   lmstudio: LmStudio,
   bedrock: Bedrock,
-  browseros: null,
+  // fouwser: null,
   moonshot: Kimi,
 }
 
