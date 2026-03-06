@@ -129,6 +129,13 @@ export class GeminiAgent {
         allowedTools: Array.from(CHAT_MODE_ALLOWED_TOOLS),
       })
     }
+    if (config.codingMode === true) {
+      const allToolNames = registry.names()
+      excludedTools.push(...allToolNames)
+      logger.info('Coding mode enabled, excluding browser automation tools', {
+        excludedToolCount: allToolNames.length,
+      })
+    }
 
     const geminiConfig = new GeminiConfig({
       sessionId: config.conversationId,
@@ -156,12 +163,24 @@ export class GeminiAgent {
     const client = geminiConfig.getGeminiClient()
     const excludeSections: string[] = []
     if (config.isScheduledTask) excludeSections.push('tab-grouping')
+    if (config.codingMode) {
+      excludeSections.push(
+        'complete-tasks',
+        'auto-included-context',
+        'observe-act-verify',
+        'handle-obstacles',
+        'error-recovery',
+        'external-integrations',
+      )
+    }
 
     client.getChat().setSystemInstruction(
       buildSystemPrompt({
         userSystemPrompt: config.userSystemPrompt,
         exclude: excludeSections,
         workspaceDir: config.sessionExecutionDir,
+        chatMode: config.chatMode,
+        codingMode: config.codingMode,
       }),
     )
     await client.setTools()

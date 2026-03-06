@@ -57,6 +57,7 @@ export class ChatV2Service {
       sessionExecutionDir,
       supportsImages: request.supportsImages,
       chatMode: request.mode === 'chat',
+      codingMode: request.mode === 'coding',
       isScheduledTask: request.isScheduledTask,
     }
 

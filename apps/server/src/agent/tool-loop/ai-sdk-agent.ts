@@ -33,27 +33,39 @@ export class AiSdkAgent {
   ) {}
 
   static async create(config: AiSdkAgentConfig): Promise<AiSdkAgent> {
+    const isChatMode = config.resolvedConfig.chatMode === true
+    const isCodingMode = config.resolvedConfig.codingMode === true
+
     // Build language model from provider config
     const model = createLanguageModel(config.resolvedConfig)
 
-    // Build browser tools from the unified tool registry
-    const browserTools = buildBrowserToolSet(config.registry, config.browser)
+    // Build browser tools from the unified tool registry.
+    // Coding mode is local-only, so browser automation is disabled.
+    const browserTools = isCodingMode
+      ? {}
+      : buildBrowserToolSet(config.registry, config.browser)
 
-    // Build external MCP server specs (Klavis, custom) and connect clients
-    const specs = await buildMcpServerSpecs({
-      browserContext: config.browserContext,
-      klavisClient: config.klavisClient,
-      browserosId: config.browserosId,
-    })
-    const { clients, tools: externalMcpTools } = await createMcpClients(specs)
+    // Build external MCP server specs (Klavis, custom) and connect clients.
+    // Skip in coding mode to keep execution focused on local code tasks.
+    let clients: Array<{ close(): Promise<void> }> = []
+    let externalMcpTools = {}
+    if (!isCodingMode) {
+      const specs = await buildMcpServerSpecs({
+        browserContext: config.browserContext,
+        klavisClient: config.klavisClient,
+        browserosId: config.browserosId,
+      })
+      const mcp = await createMcpClients(specs)
+      clients = mcp.clients
+      externalMcpTools = mcp.tools
+    }
 
     // Add filesystem tools (Pi coding agent) — skip in chat mode (read-only)
-    const filesystemTools = config.resolvedConfig.chatMode
+    const filesystemTools = isChatMode
       ? {}
       : buildFilesystemToolSet(config.resolvedConfig.sessionExecutionDir)
-    const memoryTools = config.resolvedConfig.chatMode
-      ? {}
-      : buildMemoryToolSet()
+    // Coding mode uses deterministic local tools and avoids long-term memory writes.
+    const memoryTools = isChatMode || isCodingMode ? {} : buildMemoryToolSet()
     const tools = {
       ...browserTools,
       ...externalMcpTools,
@@ -68,6 +80,16 @@ export class AiSdkAgent {
     if (config.resolvedConfig.isScheduledTask) {
       excludeSections.push('tab-grouping')
     }
+    if (isCodingMode) {
+      excludeSections.push(
+        'complete-tasks',
+        'auto-included-context',
+        'observe-act-verify',
+        'handle-obstacles',
+        'error-recovery',
+        'external-integrations',
+      )
+    }
     const soulContent = await readSoul()
     const isBootstrap = await isSoulBootstrap()
     const instructions = buildSystemPrompt({
@@ -79,6 +101,7 @@ export class AiSdkAgent {
       soulContent,
       isSoulBootstrap: isBootstrap,
       chatMode: config.resolvedConfig.chatMode,
+      codingMode: config.resolvedConfig.codingMode,
     })
 
     // Configure compaction for context window management
