@@ -8,7 +8,7 @@
 
 export const PATHS = {
   DEFAULT_EXECUTION_DIR: process.cwd(),
-  BROWSEROS_DIR_NAME: '.browseros',
+  BROWSEROS_DIR_NAME: '.fouwser',
   MEMORY_DIR_NAME: 'memory',
   SESSIONS_DIR_NAME: 'sessions',
   TOOL_OUTPUT_DIR_NAME: 'tool-output',
