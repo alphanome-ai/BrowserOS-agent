@@ -191,3 +191,6 @@ tmp/
 .agent/
 .llm/
 .grove/
+
+# Browser build 
+.release-keys/
