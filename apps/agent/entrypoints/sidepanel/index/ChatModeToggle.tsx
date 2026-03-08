@@ -38,7 +38,7 @@ export const ChatModeToggle: FC<ChatModeToggleProps> = ({
     },
     coding: {
       label: 'Coding',
-      description: 'Uses local filesystem tools for coding tasks',
+      description: 'Uses your local system for coding tasks',
       icon: Braces,
     },
   }
