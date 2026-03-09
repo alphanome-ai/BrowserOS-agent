@@ -38,11 +38,14 @@ function contentToModelOutput(
 export function buildBrowserToolSet(
   registry: ToolRegistry,
   browser: Browser,
+  options?: { allowNames?: Set<string> },
 ): ToolSet {
   const toolSet: ToolSet = {}
   const ctx = { browser }
 
   for (const def of registry.all()) {
+    if (options?.allowNames && !options.allowNames.has(def.name)) continue
+
     toolSet[def.name] = tool({
       description: def.description,
       inputSchema: def.input,

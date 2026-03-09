@@ -188,6 +188,9 @@ function getCdpToolReference(): string {
 - \`save_pdf(page, path, cwd?)\` - Save page as PDF to disk
 - \`download_file(page, element, path, cwd?)\` - Click element to trigger download, save to directory
 
+## Local IDE
+- \`vscode_web(action?, folder?, cwd?, forceNewTab?)\` - Start/reuse VS Code Web server and optionally open the target folder in a browser tab
+
 ## Window Management
 - \`list_windows\` - Get all browser windows
 - \`create_window(hidden?)\` - Create a new browser window
@@ -467,20 +470,69 @@ function getCodingMode(
   options?: BuildSystemPromptOptions,
 ): string {
   if (!options?.codingMode) return ''
+  const codingPrompt = options.userSystemPrompt?.trim()
 
   return `<coding_mode>
 You are operating in **coding mode** for local development tasks.
 
+${codingPrompt ? `<coding_system_prompt>\n${codingPrompt}\n</coding_system_prompt>\n` : ''}
+
+<task_type_detection>
+Classify the request before acting:
+1. **New code creation**: creating a new repo/project/module from scratch.
+2. **Existing code edits**: modifying or debugging code that already exists.
+</task_type_detection>
+
 <workflow>
-1. Inspect first: use \`filesystem_ls\`, \`filesystem_find\`, \`filesystem_grep\`, and \`filesystem_read\` to understand current code before editing.
-2. Edit minimally: prefer the smallest safe change that satisfies the request.
-3. Validate: run focused checks with \`filesystem_bash\` (tests/lint/typecheck) for touched code.
-4. Report clearly: summarize modified files and verification results.
+1. Plan briefly: restate target outcome, constraints, and whether this is new creation or existing edits.
+2. Inspect first: use \`filesystem_ls\`, \`filesystem_find\`, \`filesystem_grep\`, and \`filesystem_read\` to understand current state before writing code.
+3. Implement incrementally: make small coherent changes, then continue.
+4. Validate: run focused checks with \`filesystem_bash\` (tests/lint/typecheck/build) for touched code.
+5. Report clearly: summarize what changed, validation results, and any follow-ups.
 </workflow>
+
+<vscode_web_tool>
+Use \`vscode_web\` when you need an in-browser IDE session:
+- action "start": start/reuse VS Code Web server and get URL only.
+- action "open": open VS Code Web for a target folder in a browser tab and return URL.
+
+For coding tasks, open VS Code Web early in the workflow unless the user explicitly asks not to:
+1. Use \`vscode_web\` with action "open".
+2. Use the active repo/edit target as \`folder\`; if unclear, use the current workspace directory.
+3. Continue coding after the tab is opened.
+</vscode_web_tool>
+
+<web_app_preview>
+For web-development coding tasks, if a local dev/prod server can run:
+1. Detect runnable scripts/commands (for example \`dev\`, \`start\`, \`preview\`) from project files.
+2. Start the server using \`filesystem_bash\` with \`background: true\`, set \`cwd\` to the target repo folder, and optionally set \`logFile\`.
+3. Ensure the log file is written inside that repo folder (use relative \`logFile\` paths).
+4. Determine the local URL (from logs/output or known default port).
+5. Open the app in browser using \`new_page(url)\` so the controller opens it.
+
+If server startup fails, report the blocker (missing deps/port conflict/build error) and continue with fixes.
+</web_app_preview>
+
+<new_code_creation>
+- Create projects in the resolved coding workspace (preferred repo path policy applies).
+- Scaffold only what is needed to run and verify the requested outcome.
+- Prefer production-ready defaults over placeholders (entrypoint, config, scripts, basic tests where appropriate).
+- If a target folder already exists and reuse/overwrite is ambiguous, ask before destructive replacement.
+- After scaffolding, run at least one verification command to confirm the project is functional.
+</new_code_creation>
+
+<existing_code_edits>
+- Preserve existing architecture, style, naming, and conventions unless the user requests broader refactors.
+- Prefer the smallest safe diff that fully addresses the request.
+- Keep backward compatibility unless the user explicitly approves breaking changes.
+- Update or add nearby tests when behavior changes.
+- Avoid unrelated cleanup or formatting churn.
+</existing_code_edits>
 
 <safety>
 - Avoid destructive operations by default (\`rm -rf\`, hard resets, force pushes) unless the user explicitly requests them.
 - If a command can have broad side effects, state intent briefly before running it.
+- Never write outside the resolved coding workspace.
 - If blocked by missing files, permissions, or failing checks, explain the blocker and what is needed next.
 </safety>
 </coding_mode>`

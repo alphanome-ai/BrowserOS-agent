@@ -23,6 +23,8 @@ import {
   detectMcpTransport,
   type McpTransportType,
 } from '../../lib/mcp-transport-detect'
+import { resolveCodingWorkingDir } from '../../lib/preferences/coding-working-dir'
+import { ensureVsCodeInstalledForCoding } from '../../lib/prerequisites/vscode'
 import type { BrowserContext, ChatRequest } from '../types'
 
 interface McpServerOptions {
@@ -65,6 +67,10 @@ export class ChatService {
     abortSignal: AbortSignal,
   ): Promise<void> {
     const { sessionManager } = this.deps
+
+    if (request.mode === 'coding') {
+      await ensureVsCodeInstalledForCoding()
+    }
 
     const providerConfig = await this.resolveProviderConfig(request)
     logger.debug('Provider config resolved', {
@@ -238,7 +244,10 @@ export class ChatService {
     let dir: string
     let userProvided: boolean
 
-    if (request.userWorkingDir) {
+    if (request.mode === 'coding') {
+      dir = await resolveCodingWorkingDir(request.userWorkingDir)
+      userProvided = !!request.userWorkingDir
+    } else if (request.userWorkingDir) {
       dir = request.userWorkingDir
       userProvided = true
     } else {

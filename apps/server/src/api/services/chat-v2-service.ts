@@ -15,6 +15,8 @@ import type { Browser } from '../../browser/browser'
 import type { KlavisClient } from '../../lib/clients/klavis/klavis-client'
 import { resolveLLMConfig } from '../../lib/clients/llm/config'
 import { logger } from '../../lib/logger'
+import { resolveCodingWorkingDir } from '../../lib/preferences/coding-working-dir'
+import { ensureVsCodeInstalledForCoding } from '../../lib/prerequisites/vscode'
 import type { ToolRegistry } from '../../tools/tool-registry'
 import type { BrowserContext, ChatRequest } from '../types'
 
@@ -35,6 +37,10 @@ export class ChatV2Service {
     abortSignal: AbortSignal,
   ): Promise<Response> {
     const { sessionStore } = this.deps
+
+    if (request.mode === 'coding') {
+      await ensureVsCodeInstalledForCoding()
+    }
 
     const llmConfig = await resolveLLMConfig(request, this.deps.browserosId)
 
@@ -224,9 +230,16 @@ export class ChatV2Service {
   }
 
   private async resolveSessionDir(request: ChatRequest): Promise<string> {
-    const dir = request.userWorkingDir
-      ? request.userWorkingDir
-      : path.join(this.deps.executionDir, 'sessions', request.conversationId)
+    const dir =
+      request.mode === 'coding'
+        ? await resolveCodingWorkingDir(request.userWorkingDir)
+        : request.userWorkingDir
+          ? request.userWorkingDir
+          : path.join(
+              this.deps.executionDir,
+              'sessions',
+              request.conversationId,
+            )
     await mkdir(dir, { recursive: true })
     return dir
   }

@@ -59,6 +59,7 @@ import {
   update_tab_group,
 } from './tab-groups'
 import { createRegistry } from './tool-registry'
+import { vscode_web } from './vscode-web'
 import {
   activate_window,
   close_window,
@@ -140,4 +141,7 @@ export const registry = createRegistry([
 
   // Info (1)
   browseros_info,
+
+  // Local IDE (1)
+  vscode_web,
 ])

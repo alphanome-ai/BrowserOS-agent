@@ -49,7 +49,7 @@ export const CODING_SUGGESTIONS: Suggestion[] = [
   {
     display: 'Build a personal productivity dashboard',
     prompt:
-      'Create a React application for a personal productivity dashboard with tasks, notes, and a daily progress chart.',
+      'Build a single-page personal productivity dashboard using React, TypeScript, Vite, and Tailwind CSS, structured in a responsive three-column grid layout. Implement state management strictly using native React hooks and ensure all user data perfectly persists across page reloads via localStorage. Create a Task component with add, toggle, delete, and filter functionality, alongside a Notes component that uses a modal interface for managing editable text cards. Integrate a lightweight charting library like Recharts to display a smooth line chart tracking the users daily task completion percentage over the last seven days. Polish the interface with a modern, clean color palette, utilizing consistent Tailwind spacing and interactive hover transitions for a premium feel.',
     icon: '📊',
   },
   // {
