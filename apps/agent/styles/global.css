@@ -328,17 +328,51 @@
   }
 
   .bg-grid-pattern {
-    background-image:
-      linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
+    background:
+      radial-gradient(
+        120% 80% at 12% -12%,
+        oklch(from var(--primary) l c h / 0.12),
+        transparent 55%
+      ),
+      radial-gradient(
+        95% 75% at 88% 2%,
+        oklch(from var(--accent-orange) l c h / 0.08),
+        transparent 60%
+      ),
+      radial-gradient(
+        130% 100% at 50% 100%,
+        oklch(from var(--background) calc(l - 0.04) c h / 0.45),
+        transparent 68%
+      ),
+      linear-gradient(
+        180deg,
+        oklch(from var(--background) calc(l + 0.01) c h),
+        oklch(from var(--background) calc(l - 0.02) c h)
+      );
   }
 
   .dark .bg-grid-pattern {
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 60px 60px;
+    background:
+      radial-gradient(
+        120% 80% at 12% -12%,
+        oklch(from var(--primary) l c h / 0.18),
+        transparent 55%
+      ),
+      radial-gradient(
+        90% 70% at 90% 4%,
+        oklch(from var(--accent-orange) l c h / 0.1),
+        transparent 60%
+      ),
+      radial-gradient(
+        140% 110% at 50% 100%,
+        rgba(255, 255, 255, 0.04),
+        transparent 66%
+      ),
+      linear-gradient(
+        180deg,
+        oklch(from var(--background) calc(l + 0.015) c h),
+        oklch(from var(--background) calc(l - 0.03) c h)
+      );
   }
 
   .bg-gradient-radial-focus {
