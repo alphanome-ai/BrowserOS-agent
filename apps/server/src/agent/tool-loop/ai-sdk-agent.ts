@@ -6,7 +6,10 @@ import type { KlavisClient } from '../../lib/clients/klavis/klavis-client'
 import { logger } from '../../lib/logger'
 import { isSoulBootstrap, readSoul } from '../../lib/soul'
 import { buildFilesystemToolSet } from '../../tools/filesystem/build-toolset'
-import { buildMemoryToolSet } from '../../tools/memory/build-toolset'
+import {
+  buildCodingMemoryToolSet,
+  buildMemoryToolSet,
+} from '../../tools/memory/build-toolset'
 import type { ToolRegistry } from '../../tools/tool-registry'
 import { buildSystemPrompt } from '../prompt'
 import type { ResolvedAgentConfig } from '../types'
@@ -64,8 +67,11 @@ export class AiSdkAgent {
     const filesystemTools = isChatMode
       ? {}
       : buildFilesystemToolSet(config.resolvedConfig.sessionExecutionDir)
-    // Coding mode uses deterministic local tools and avoids long-term memory writes.
-    const memoryTools = isChatMode || isCodingMode ? {} : buildMemoryToolSet()
+    const memoryTools = isChatMode
+      ? {}
+      : isCodingMode
+        ? buildCodingMemoryToolSet()
+        : buildMemoryToolSet()
     const tools = {
       ...browserTools,
       ...externalMcpTools,
