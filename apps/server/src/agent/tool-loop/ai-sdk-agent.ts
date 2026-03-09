@@ -43,9 +43,11 @@ export class AiSdkAgent {
     const model = createLanguageModel(config.resolvedConfig)
 
     // Build browser tools from the unified tool registry.
-    // Coding mode is local-only, so browser automation is disabled.
+    // Coding mode keeps minimal browser tools for local IDE + web preview.
     const browserTools = isCodingMode
-      ? {}
+      ? buildBrowserToolSet(config.registry, config.browser, {
+          allowNames: new Set(['vscode_web', 'new_page']),
+        })
       : buildBrowserToolSet(config.registry, config.browser)
 
     // Build external MCP server specs (Klavis, custom) and connect clients.

@@ -60,6 +60,7 @@ import {
   update_tab_group,
 } from './tab-groups'
 import { createRegistry } from './tool-registry'
+import { vscode_web } from './vscode-web'
 import {
   activate_window,
   close_window,
@@ -145,4 +146,7 @@ export const registry = createRegistry([
   // Nudges (2)
   suggest_schedule,
   suggest_app_connection,
+
+  // Local IDE (1)
+  vscode_web,
 ])

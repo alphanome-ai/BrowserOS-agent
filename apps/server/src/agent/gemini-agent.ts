@@ -131,9 +131,14 @@ export class GeminiAgent {
     }
     if (config.codingMode === true) {
       const allToolNames = registry.names()
-      excludedTools.push(...allToolNames)
-      logger.info('Coding mode enabled, excluding browser automation tools', {
-        excludedToolCount: allToolNames.length,
+      const codingAllowedTools = new Set(['vscode_web', 'new_page'])
+      const codingExcludedTools = allToolNames.filter(
+        (name) => !codingAllowedTools.has(name),
+      )
+      excludedTools.push(...codingExcludedTools)
+      logger.info('Coding mode enabled, keeping limited browser tools', {
+        allowedTools: Array.from(codingAllowedTools),
+        excludedToolCount: codingExcludedTools.length,
       })
     }
 

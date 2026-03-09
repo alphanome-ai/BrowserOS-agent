@@ -17,6 +17,8 @@ import type { KlavisClient } from '../../lib/clients/klavis/klavis-client'
 import { resolveLLMConfig } from '../../lib/clients/llm/config'
 import { logger } from '../../lib/logger'
 import type { ToolRegistry } from '../../tools/tool-registry'
+import { resolveCodingWorkingDir } from '../../lib/preferences/coding-working-dir'
+import { ensureVsCodeInstalledForCoding } from '../../lib/prerequisites/vscode'
 import type { BrowserContext, ChatRequest } from '../types'
 
 export interface ChatServiceDeps {
@@ -35,6 +37,10 @@ export class ChatService {
     abortSignal: AbortSignal,
   ): Promise<Response> {
     const { sessionStore } = this.deps
+
+    if (request.mode === 'coding') {
+      await ensureVsCodeInstalledForCoding()
+    }
 
     const llmConfig = await resolveLLMConfig(request, this.deps.browserosId)
 

@@ -146,6 +146,85 @@ function getErrorRecovery(): string {
 }
 
 // -----------------------------------------------------------------------------
+// section: cdp-tool-reference
+// Skipped by ToolLoopAgent — the AI SDK already injects tool schemas into the
+// LLM call. Kept for MCP prompt serving where clients lack tool definitions.
+// -----------------------------------------------------------------------------
+
+function getCdpToolReference(): string {
+  return `# Tool Reference
+
+## Page Management
+- \`get_active_page\` - Get the currently active (focused) page
+- \`list_pages\` - Get all open pages with IDs, titles, tab IDs, and URLs
+- \`new_page(url, hidden?, background?, windowId?)\` - Open a new page. Use hidden for background processing, background to avoid activating.
+- \`close_page(page)\` - Close a page by its page ID
+- \`navigate_page(page, action, url?)\` - Navigate: action is "url", "back", "forward", or "reload"
+- \`wait_for(page, text?, selector?, timeout?)\` - Wait for text or CSS selector to appear
+
+## Content Capture
+- \`take_snapshot(page)\` - Get interactive elements with IDs (e.g. [47]). **Always take before interacting.**
+- \`take_enhanced_snapshot(page)\` - Detailed accessibility tree with structural context
+- \`get_page_content(page, selector?, viewportOnly?, includeLinks?, includeImages?)\` - Extract page as clean markdown with headers, links, lists, tables. **Prefer for data extraction.**
+- \`take_screenshot(page, format?, quality?, fullPage?)\` - Capture page image
+- \`evaluate_script(page, expression)\` - Run JavaScript in page context
+
+## Input & Interaction
+- \`click(page, element)\` - Click element by ID from snapshot
+- \`click_at(page, x, y)\` - Click at specific coordinates
+- \`hover(page, element)\` - Hover over element
+- \`focus(page, element)\` - Focus an element (scrolls into view first)
+- \`clear(page, element)\` - Clear text from input or textarea
+- \`fill(page, element, text, clear?)\` - Type into input/textarea (clears first by default)
+- \`check(page, element)\` - Check a checkbox or radio button (no-op if already checked)
+- \`uncheck(page, element)\` - Uncheck a checkbox (no-op if already unchecked)
+- \`upload_file(page, element, files)\` - Set file(s) on a file input (absolute paths)
+- \`select_option(page, element, value)\` - Select dropdown option by value or text
+- \`press_key(page, key)\` - Press key or combo (e.g., "Enter", "Control+A", "ArrowDown")
+- \`drag(page, sourceElement, targetElement?, targetX?, targetY?)\` - Drag element to another element or coordinates
+- \`scroll(page, direction?, amount?, element?)\` - Scroll page or element (up/down/left/right)
+- \`handle_dialog(page, accept, promptText?)\` - Handle browser dialogs (alert, confirm, prompt)
+
+## Page Actions
+- \`save_pdf(page, path, cwd?)\` - Save page as PDF to disk
+- \`download_file(page, element, path, cwd?)\` - Click element to trigger download, save to directory
+
+## Local IDE
+- \`vscode_web(action?, folder?, cwd?, forceNewTab?)\` - Start/reuse VS Code Web server and optionally open the target folder in a browser tab
+
+## Window Management
+- \`list_windows\` - Get all browser windows
+- \`create_window(hidden?)\` - Create a new browser window
+- \`close_window(windowId)\` - Close a browser window
+- \`activate_window(windowId)\` - Activate (focus) a browser window
+
+## Tab Groups
+- \`list_tab_groups\` - Get all tab groups with IDs, titles, colors, and page IDs
+- \`group_tabs(pageIds, title?, groupId?)\` - Create group or add pages to existing group (groupId is a string)
+- \`update_tab_group(groupId, title?, color?, collapsed?)\` - Update group properties
+- \`ungroup_tabs(pageIds)\` - Remove pages from their groups
+- \`close_tab_group(groupId)\` - Close a tab group and all its tabs
+
+**Colors**: grey, blue, red, yellow, green, pink, purple, cyan, orange
+
+## Bookmarks
+- \`get_bookmarks\` - Get all bookmarks
+- \`create_bookmark(title, url?, parentId?)\` - Create bookmark or folder (omit url for folder)
+- \`update_bookmark(id, title?, url?)\` - Edit bookmark
+- \`remove_bookmark(id)\` - Delete bookmark or folder (recursive)
+- \`move_bookmark(id, parentId?, index?)\` - Move bookmark or folder
+- \`search_bookmarks(query)\` - Search bookmarks by title or URL
+
+## History
+- \`search_history(query, maxResults?)\` - Search browser history
+- \`get_recent_history(maxResults?)\` - Get recent history items
+- \`delete_history_url(url)\` - Delete a specific URL from history
+- \`delete_history_range(startTime, endTime)\` - Delete history within a time range (epoch ms)
+
+---`
+}
+
+// -----------------------------------------------------------------------------
 // section: external-integrations
 // -----------------------------------------------------------------------------
 
@@ -465,20 +544,69 @@ function getCodingMode(
   options?: BuildSystemPromptOptions,
 ): string {
   if (!options?.codingMode) return ''
+  const codingPrompt = options.userSystemPrompt?.trim()
 
   return `<coding_mode>
 You are operating in **coding mode** for local development tasks.
 
+${codingPrompt ? `<coding_system_prompt>\n${codingPrompt}\n</coding_system_prompt>\n` : ''}
+
+<task_type_detection>
+Classify the request before acting:
+1. **New code creation**: creating a new repo/project/module from scratch.
+2. **Existing code edits**: modifying or debugging code that already exists.
+</task_type_detection>
+
 <workflow>
-1. Inspect first: use \`filesystem_ls\`, \`filesystem_find\`, \`filesystem_grep\`, and \`filesystem_read\` to understand current code before editing.
-2. Edit minimally: prefer the smallest safe change that satisfies the request.
-3. Validate: run focused checks with \`filesystem_bash\` (tests/lint/typecheck) for touched code.
-4. Report clearly: summarize modified files and verification results.
+1. Plan briefly: restate target outcome, constraints, and whether this is new creation or existing edits.
+2. Inspect first: use \`filesystem_ls\`, \`filesystem_find\`, \`filesystem_grep\`, and \`filesystem_read\` to understand current state before writing code.
+3. Implement incrementally: make small coherent changes, then continue.
+4. Validate: run focused checks with \`filesystem_bash\` (tests/lint/typecheck/build) for touched code.
+5. Report clearly: summarize what changed, validation results, and any follow-ups.
 </workflow>
+
+<vscode_web_tool>
+Use \`vscode_web\` when you need an in-browser IDE session:
+- action "start": start/reuse VS Code Web server and get URL only.
+- action "open": open VS Code Web for a target folder in a browser tab and return URL.
+
+For coding tasks, open VS Code Web early in the workflow unless the user explicitly asks not to:
+1. Use \`vscode_web\` with action "open".
+2. Use the active repo/edit target as \`folder\`; if unclear, use the current workspace directory.
+3. Continue coding after the tab is opened.
+</vscode_web_tool>
+
+<web_app_preview>
+For web-development coding tasks, if a local dev/prod server can run:
+1. Detect runnable scripts/commands (for example \`dev\`, \`start\`, \`preview\`) from project files.
+2. Start the server using \`filesystem_bash\` with \`background: true\`, set \`cwd\` to the target repo folder, and optionally set \`logFile\`.
+3. Ensure the log file is written inside that repo folder (use relative \`logFile\` paths).
+4. Determine the local URL (from logs/output or known default port).
+5. Open the app in browser using \`new_page(url)\` so the controller opens it.
+
+If server startup fails, report the blocker (missing deps/port conflict/build error) and continue with fixes.
+</web_app_preview>
+
+<new_code_creation>
+- Create projects in the resolved coding workspace (preferred repo path policy applies).
+- Scaffold only what is needed to run and verify the requested outcome.
+- Prefer production-ready defaults over placeholders (entrypoint, config, scripts, basic tests where appropriate).
+- If a target folder already exists and reuse/overwrite is ambiguous, ask before destructive replacement.
+- After scaffolding, run at least one verification command to confirm the project is functional.
+</new_code_creation>
+
+<existing_code_edits>
+- Preserve existing architecture, style, naming, and conventions unless the user requests broader refactors.
+- Prefer the smallest safe diff that fully addresses the request.
+- Keep backward compatibility unless the user explicitly approves breaking changes.
+- Update or add nearby tests when behavior changes.
+- Avoid unrelated cleanup or formatting churn.
+</existing_code_edits>
 
 <safety>
 - Avoid destructive operations by default (\`rm -rf\`, hard resets, force pushes) unless the user explicitly requests them.
 - If a command can have broad side effects, state intent briefly before running it.
+- Never write outside the resolved coding workspace.
 - If blocked by missing files, permissions, or failing checks, explain the blocker and what is needed next.
 </safety>
 </coding_mode>`

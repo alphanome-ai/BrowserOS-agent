@@ -39,6 +39,7 @@ export function buildBrowserToolSet(
   registry: ToolRegistry,
   browser: Browser,
   workingDir: string,
+  options?: { allowNames?: Set<string> },
 ): ToolSet {
   const toolSet: ToolSet = {}
   const ctx: ToolContext = {
@@ -47,6 +48,8 @@ export function buildBrowserToolSet(
   }
 
   for (const def of registry.all()) {
+    if (options?.allowNames && !options.allowNames.has(def.name)) continue
+
     toolSet[def.name] = tool({
       description: def.description,
       inputSchema: def.input,
