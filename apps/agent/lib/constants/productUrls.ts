@@ -1,61 +1,59 @@
 /**
  * @public
  */
-export const docsUrl = 'https://docs.browseros.com/'
+export const docsUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const productWebUrl = 'https://browseros.com'
+export const productWebUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const productRepositoryUrl = 'https://github.com/browseros-ai/BrowserOS'
+export const productRepositoryUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const githubOrgUrl = 'https://github.com/browseros-ai'
+export const githubOrgUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const privacyPolicyUrl = 'https://browseros.com/privacy'
+export const privacyPolicyUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const contributorsUrl =
-  'https://github.com/browseros-ai/BrowserOS/graphs/contributors'
+export const contributorsUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const discordUrl = 'https://discord.gg/browseros'
+export const discordUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const slackUrl = 'https://dub.sh/browserOS-slack'
+export const slackUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const productVideoUrl = 'https://youtu.be/J-lFhTP-7is'
+export const productVideoUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const productRepositoryShortUrl = 'https://git.new/browseros'
+export const productRepositoryShortUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const workflowsHelpUrl = 'https://docs.browseros.com/features/workflows'
+export const workflowsHelpUrl = 'https://alphanome.ai'
 
 /**
  * @public
  */
-export const scheduledTasksHelpUrl =
-  'https://docs.browseros.com/features/scheduled-tasks'
+export const scheduledTasksHelpUrl = 'https://alphanome.ai'
