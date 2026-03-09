@@ -16,3 +16,14 @@ export function buildMemoryToolSet(): ToolSet {
     soul_update: createSoulUpdateTool(),
   }
 }
+
+export function buildCodingMemoryToolSet(): ToolSet {
+  return {
+    memory_search: createMemorySearchTool(),
+    memory_write: createMemoryWriteTool(),
+    memory_read_core: createReadCoreTool(),
+    memory_save_core: createSaveCoreTool(),
+    soul_read: createSoulReadTool(),
+    soul_update: createSoulUpdateTool(),
+  }
+}

@@ -325,7 +325,31 @@ function getMemory(
   _exclude: Set<string>,
   options?: BuildSystemPromptOptions,
 ): string {
-  if (options?.chatMode || options?.codingMode) return ''
+  if (options?.chatMode) return ''
+
+  if (options?.codingMode) {
+    return `<memory_instructions>
+Use core memory to persist the user's preferred base path for creating and building repositories.
+
+**Before creating a repo or running build commands in a new location**:
+1. Call \`memory_search\` with keywords such as ["preferred repo path", "repo base path", "create repos", "build repos"].
+2. If no preferred path is found and the user did not provide one in this conversation, ask for it explicitly before proceeding.
+3. After the user provides the path, call \`memory_read_core\`, merge the new fact, then call \`memory_save_core\`.
+
+Store this fact in core memory under a stable, structured block:
+\`\`\`
+## Coding Preferences
+- preferred_repo_base_path: /absolute/path
+- preferred_repo_base_path_last_updated_utc: YYYY-MM-DDTHH:mm:ssZ
+- preferred_repo_base_path_source: user
+- preferred_repo_base_path_notes: default location for new repos
+\`\`\`
+
+When updating this preference, update these fields in-place and avoid duplicate keys.
+
+If the user gives a one-off override path for the current task, use it for this task and keep the stored preference unless they ask to change it.
+</memory_instructions>`
+  }
 
   return `<memory_instructions>
 You have long-term memory. Use it proactively:
