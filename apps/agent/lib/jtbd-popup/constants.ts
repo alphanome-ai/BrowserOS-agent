@@ -5,3 +5,6 @@ export const JTBD_POPUP_CONSTANTS = {
   // Set to 1 to show to everyone
   SAMPLING_DIVISOR: 1,
 } as const
+
+// Global kill-switch for the JTBD popup.
+export const JTBD_POPUP_ENABLED = false
