@@ -282,7 +282,8 @@ async function uploadSourceMaps(
 
 async function build(config: BuildConfig): Promise<void> {
   const { mode, targets, version, envVars, buildEnv } = config
-  const shouldUploadSourceMaps = mode === 'prod' && envVars.SENTRY_AUTH_TOKEN
+  const shouldUploadSourceMaps =
+    mode === 'prod' && envVars.SENTRY_AUTH_TOKEN && false
 
   log.header(`Building BrowserOS server v${version}`)
   log.info(`Mode: ${mode}`)
