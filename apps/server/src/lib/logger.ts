@@ -142,7 +142,16 @@ export class Logger implements LoggerInterface {
 
     const transport = createConsoleTransport()
     if (transport) {
-      return pino(options, pino.transport(transport))
+      try {
+        return pino(options, pino.transport(transport))
+      } catch (error) {
+        // Fallback when transport target (e.g., pino-pretty) isn't available
+        // in bundled/compiled environments.
+        console.warn(
+          'Console transport unavailable; falling back to JSON stdout.',
+          error,
+        )
+      }
     }
 
     // Production: use pino.destination() for async writes without worker threads.
