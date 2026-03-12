@@ -5,8 +5,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
-import { Feature } from '@/lib/browseros/capabilities'
-import { useCapabilities } from '@/lib/browseros/useCapabilities'
+// import { Feature } from '@/lib/browseros/capabilities'
+// import { useCapabilities } from '@/lib/browseros/useCapabilities'
 import {
   type ProviderTemplate,
   providerTemplates,
@@ -21,15 +21,19 @@ interface ProviderTemplatesSectionProps {
 export const ProviderTemplatesSection: FC<ProviderTemplatesSectionProps> = ({
   onUseTemplate,
 }) => {
-  const { supports } = useCapabilities()
+  // const { supports } = useCapabilities()
 
-  const filteredTemplates = providerTemplates.filter((template) => {
-    if (
-      template.id === 'openai-compatible' ||
-      template.id === 'openai-compatible-responses'
-    ) {
-      return supports(Feature.OPENAI_COMPATIBLE_SUPPORT)
-    }
+  // const filteredTemplates = providerTemplates.filter((template) => {
+  //   if (
+  //     template.id === 'openai-compatible' ||
+  //     template.id === 'openai-compatible-responses'
+  //   ) {
+  //     return supports(Feature.OPENAI_COMPATIBLE_SUPPORT)
+  //   }
+  //   return true
+  // })
+
+  const filteredTemplates = providerTemplates.filter((_template) => {
     return true
   })
 
