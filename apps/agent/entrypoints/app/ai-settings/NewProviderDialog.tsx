@@ -30,9 +30,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Feature } from '@/lib/browseros/capabilities'
+// import { Feature } from '@/lib/browseros/capabilities'
 import { useAgentServerUrl } from '@/lib/browseros/useBrowserOSProviders'
-import { useCapabilities } from '@/lib/browseros/useCapabilities'
+// import { useCapabilities } from '@/lib/browseros/useCapabilities'
 import {
   AI_PROVIDER_ADDED_EVENT,
   KIMI_API_KEY_CONFIGURED_EVENT,
@@ -61,7 +61,7 @@ const providerTypeEnum = z.enum([
   'ollama',
   'lmstudio',
   'bedrock',
-  // 'fouwser',
+  'fouwser',
 ])
 
 /**
@@ -178,19 +178,19 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
   const [isCustomModel, setIsCustomModel] = useState(false)
   const [isTesting, setIsTesting] = useState(false)
   const [testResult, setTestResult] = useState<TestResult | null>(null)
-  const { supports } = useCapabilities()
+  // const { supports } = useCapabilities()
   const { baseUrl: agentServerUrl } = useAgentServerUrl()
   const kimiLaunch = useKimiLaunch()
 
-  const filteredProviderTypeOptions = providerTypeOptions.filter((opt) => {
-    if (opt.value === 'moonshot')
-      return kimiLaunch || initialValues?.type === 'moonshot'
-    if (
-      opt.value === 'openai-compatible' ||
-      opt.value === 'openai-compatible-responses'
-    ) {
-      return supports(Feature.OPENAI_COMPATIBLE_SUPPORT)
-    }
+  const filteredProviderTypeOptions = providerTypeOptions.filter((_opt) => {
+    // if (opt.value === 'moonshot')
+    //   return kimiLaunch || initialValues?.type === 'moonshot'
+    // if (
+    //   opt.value === 'openai-compatible' ||
+    //   opt.value === 'openai-compatible-responses'
+    // ) {
+    //   return supports(Feature.OPENAI_COMPATIBLE_SUPPORT)
+    // }
     return true
   })
 

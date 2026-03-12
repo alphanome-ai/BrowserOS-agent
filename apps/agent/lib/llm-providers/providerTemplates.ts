@@ -44,16 +44,16 @@ export const providerTemplates: ProviderTemplate[] = [
   {
     id: 'openai-compatible',
     name: 'OpenAI Compatible',
-    defaultBaseUrl: '',
-    defaultModelId: '',
+    defaultBaseUrl: 'https://api.openai.com/v1',
+    defaultModelId: 'gpt-5',
     supportsImages: true,
     contextWindow: 128000,
   },
   {
     id: 'openai-compatible-responses',
     name: 'OpenAI Compatible (Responses API)',
-    defaultBaseUrl: '',
-    defaultModelId: '',
+    defaultBaseUrl: 'https://api.openai.com/v1',
+    defaultModelId: 'gpt-5',
     supportsImages: true,
     contextWindow: 128000,
   },
@@ -180,7 +180,7 @@ export const DEFAULT_BASE_URLS: Record<ProviderType, string> = {
   ollama: 'http://localhost:11434/v1',
   lmstudio: 'http://localhost:1234/v1',
   bedrock: '',
-  // fouwser: '',
+  fouwser: '',
 }
 
 /**

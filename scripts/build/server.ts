@@ -319,7 +319,7 @@ async function build(config: BuildConfig): Promise<void> {
     log.success(`${target.name} compiled`)
   }
 
-  rmSync(BUNDLE_DIR, { recursive: true, force: true })
+  // rmSync(BUNDLE_DIR, { recursive: true, force: true })
 
   if (shouldUploadSourceMaps) {
     log.step('Uploading source maps to Sentry...')

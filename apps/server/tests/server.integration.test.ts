@@ -66,6 +66,14 @@ describe('HTTP Server Integration Tests', () => {
       const json = await response.json()
       assert.strictEqual(json.status, 'ok')
     })
+
+    it('responds with 200 OK on /fouwser/health', async () => {
+      const response = await fetch(`${getBaseUrl()}/fouwser/health`)
+      assert.strictEqual(response.status, 200)
+
+      const json = await response.json()
+      assert.strictEqual(json.status, 'ok')
+    })
   })
 
   describe('Status endpoint', () => {
