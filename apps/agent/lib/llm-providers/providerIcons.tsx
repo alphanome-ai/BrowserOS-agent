@@ -30,7 +30,7 @@ const providerIconMap: Record<ProviderType, IconComponent | null> = {
   ollama: Ollama,
   lmstudio: LmStudio,
   bedrock: Bedrock,
-  // fouwser: null,
+  fouwser: OpenAI,
 }
 
 interface ProviderIconProps {
@@ -68,7 +68,7 @@ export const BrowserOSIcon: FC<{ size?: number; className?: string }> = ({
   return (
     <img
       src={ProductLogoSvg}
-      alt="BrowserOS"
+      alt="Fouwser"
       width={size}
       height={size}
       className={className}

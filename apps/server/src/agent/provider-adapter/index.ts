@@ -121,7 +121,7 @@ function createBedrockFactory(
   })
 }
 
-function createBrowserOSFactory(
+function _createBrowserOSFactory(
   config: VercelAIConfig,
 ): (modelId: string) => unknown {
   if (!config.baseUrl) throw new Error('BrowserOS provider requires baseUrl')
@@ -183,7 +183,7 @@ const PROVIDER_FACTORIES: Record<string, ProviderFactory> = {
   [AIProvider.LMSTUDIO]: createLMStudioFactory,
   [AIProvider.OLLAMA]: createOllamaFactory,
   [AIProvider.BEDROCK]: createBedrockFactory,
-  [AIProvider.BROWSEROS]: createBrowserOSFactory,
+  // [AIProvider.BROWSEROS]: createBrowserOSFactory,
   [AIProvider.OPENAI_COMPATIBLE]: createOpenAICompatibleFactory,
   [AIProvider.OPENAI_COMPATIBLE_RESPONSES]:
     createOpenAICompatibleResponsesFactory,

@@ -40,7 +40,7 @@ export const AGENT_SUGGESTIONS: Suggestion[] = [
   // },
   {
     display: 'Open amazon.com and order a GPU for me',
-    prompt: 'Open amazon.com in current tab and add a GPU for me to cart',
+    prompt: 'Navigate to amazon.com and add a GPU for me to my cart.',
     icon: '🛒',
   },
 ]

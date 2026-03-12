@@ -70,6 +70,7 @@ export async function createHttpServer(config: HttpServerConfig) {
   const app = new Hono<Env>()
     .use('/*', cors(defaultCorsConfig))
     .route('/health', createHealthRoute({ browser }))
+    .route('/fouwser/health', createHealthRoute({ browser }))
     .route(
       '/shutdown',
       createShutdownRoute({ onShutdown: onShutdown ?? (() => {}) }),

@@ -1,7 +1,7 @@
 {
   "name": "@browseros/server",
-  "version": "0.0.2",
-  "description": "BrowserOS server",
+  "version": "0.0.8",
+  "description": "Fouwser server",
   "type": "module",
   "main": "./src/index.ts",
   "bin": {
