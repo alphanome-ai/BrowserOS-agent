@@ -40,10 +40,10 @@ export const StepsLayout = () => {
   }
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-background">
+    <div className="flex min-h-dvh flex-col bg-background">
       {/* Progress Indicator */}
       <div className="border-border/40 border-b">
-        <div className="mx-auto max-w-3xl px-6 py-5">
+        <div className="mx-auto max-w-3xl px-6 py-4 md:py-5">
           <div className="relative flex items-center justify-between">
             {steps.map((step) => {
               const isCompleted = step.id < currentStep
@@ -91,10 +91,10 @@ export const StepsLayout = () => {
       </div>
 
       {/* Main Content */}
-      <main className="flex flex-1 items-center justify-center overflow-y-auto overflow-x-hidden px-6">
+      <main className="flex flex-1 items-start justify-center overflow-y-auto overflow-x-hidden px-6 py-6 md:items-center md:py-8">
         <div className="w-full max-w-4xl">
-          <div className="relative h-[550px]">
-            <AnimatePresence initial={false} custom={direction}>
+          <div className="relative w-full">
+            <AnimatePresence initial={false} custom={direction} mode="wait">
               <ActiveStep
                 key={currentStep}
                 direction={direction}
@@ -102,7 +102,7 @@ export const StepsLayout = () => {
               />
             </AnimatePresence>
           </div>
-          <div className="pt-8">
+          <div className="pt-6 md:pt-8">
             <Button variant="ghost" asChild className="group">
               <NavLink
                 onClick={() => setDirection(-1)}

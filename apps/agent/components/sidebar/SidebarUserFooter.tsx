@@ -1,4 +1,4 @@
-import { Info, Keyboard } from 'lucide-react'
+import { ChevronsLeft, ChevronsRight, Info, Keyboard } from 'lucide-react'
 import type { FC } from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,11 +12,13 @@ import { cn } from '@/lib/utils'
 interface SidebarUserFooterProps {
   expanded?: boolean
   onOpenShortcuts?: () => void
+  onToggleExpanded?: () => void
 }
 
 export const SidebarUserFooter: FC<SidebarUserFooterProps> = ({
   expanded = true,
   onOpenShortcuts,
+  onToggleExpanded,
 }) => {
   // const signInButton = (
   //   <Button
@@ -73,6 +75,28 @@ export const SidebarUserFooter: FC<SidebarUserFooterProps> = ({
     </Button>
   )
 
+  const expandCollapseButton = (
+    <Button
+      variant="ghost"
+      onClick={onToggleExpanded}
+      className="flex h-9 w-full items-center justify-start gap-2 overflow-hidden whitespace-nowrap rounded-md px-3 font-medium text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+    >
+      {expanded ? (
+        <ChevronsLeft className="size-4 shrink-0" />
+      ) : (
+        <ChevronsRight className="size-4 shrink-0" />
+      )}
+      <span
+        className={cn(
+          'truncate transition-opacity duration-200',
+          expanded ? 'opacity-100' : 'opacity-0',
+        )}
+      >
+        {expanded ? 'Collapse' : 'Expand'}
+      </span>
+    </Button>
+  )
+
   return (
     <TooltipProvider delayDuration={0}>
       <div className="mt-auto space-y-1 border-t p-2">
@@ -91,6 +115,15 @@ export const SidebarUserFooter: FC<SidebarUserFooterProps> = ({
           <Tooltip>
             <TooltipTrigger asChild>{aboutLink}</TooltipTrigger>
             <TooltipContent side="right">About Fouwser</TooltipContent>
+          </Tooltip>
+        )}
+
+        {expanded ? (
+          expandCollapseButton
+        ) : (
+          <Tooltip>
+            <TooltipTrigger asChild>{expandCollapseButton}</TooltipTrigger>
+            <TooltipContent side="right">Expand sidebar</TooltipContent>
           </Tooltip>
         )}
       </div>

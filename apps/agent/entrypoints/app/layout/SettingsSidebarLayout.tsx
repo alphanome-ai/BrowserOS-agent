@@ -14,6 +14,7 @@ export const SettingsSidebarLayout: FC = () => {
   const location = useLocation()
   const isMobile = useIsMobile()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isCompact, setIsCompact] = useState(false)
 
   useEffect(() => {
     track(SETTINGS_PAGE_VIEWED_EVENT, { page: location.pathname })
@@ -23,7 +24,15 @@ export const SettingsSidebarLayout: FC = () => {
     setMobileOpen(false)
   }, [])
 
-  if (isMobile) {
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 1100px)')
+    const onChange = () => setIsCompact(mediaQuery.matches)
+    onChange()
+    mediaQuery.addEventListener('change', onChange)
+    return () => mediaQuery.removeEventListener('change', onChange)
+  }, [])
+
+  if (isMobile || isCompact) {
     return (
       <RpcClientProvider>
         <div className="flex min-h-screen flex-col bg-background">
@@ -44,7 +53,10 @@ export const SettingsSidebarLayout: FC = () => {
             </div>
           </main>
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetContent side="left" className="w-72 p-0">
+            <SheetContent
+              side="left"
+              className="w-64 max-w-[calc(100vw-1rem)] border-r-0 p-0 [&>button]:hidden"
+            >
               <SettingsSidebar />
             </SheetContent>
           </Sheet>
@@ -55,7 +67,7 @@ export const SettingsSidebarLayout: FC = () => {
 
   return (
     <RpcClientProvider>
-      <div className="flex h-screen bg-background">
+      <div className="flex min-h-dvh bg-background">
         <SettingsSidebar />
         <main className="flex-1 overflow-y-auto">
           <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">

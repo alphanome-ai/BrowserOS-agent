@@ -18,6 +18,14 @@ export const Onboarding: FC = () => {
     track(ONBOARDING_STARTED_EVENT)
   }, [])
 
+  const handleOpenNewTab = async () => {
+    if (typeof chrome !== 'undefined' && chrome.tabs?.create) {
+      await chrome.tabs.create({ active: true })
+      return
+    }
+    window.open('about:blank', '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <OnboardingHeader isMounted={mounted} />
@@ -36,7 +44,7 @@ export const Onboarding: FC = () => {
               className={`text-balance font-semibold text-5xl leading-[1.1] tracking-tight transition-all delay-200 duration-700 md:text-7xl ${mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
             >
               Welcome to{' '}
-              <span className="inline-block animate-glow-once text-accent-orange">
+              <span className="inline-block animate-glow-once text-foreground">
                 Fouwser
               </span>
             </h1>
@@ -48,7 +56,7 @@ export const Onboarding: FC = () => {
             </p>
 
             <div
-              className={`flex items-center justify-center gap-4 pt-4 transition-all delay-500 duration-700 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
+              className={`flex flex-col items-center justify-center gap-3 pt-4 transition-all delay-500 duration-700 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
             >
               <Button
                 size="lg"
@@ -59,6 +67,14 @@ export const Onboarding: FC = () => {
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </NavLink>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={handleOpenNewTab}
+                className="border-border bg-background transition-transform duration-200 hover:scale-105 hover:bg-accent"
+              >
+                Open New Tab
               </Button>
               {/* <Button
                 size="lg"

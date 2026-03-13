@@ -28,32 +28,26 @@ export const LlmProvidersHeader: FC<LlmProvidersHeaderProps> = ({
   onAddProvider,
 }) => {
   return (
-    <div className="rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md">
+    <div className="rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:shadow-md sm:p-6">
       <div className="flex items-start gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
           <img src={ProductLogoSvg} alt="Fouwser" className="h-8 w-8" />
         </div>
         <div className="flex-1">
           <h2 className="mb-1 font-semibold text-xl">LLM Providers</h2>
-          <p className="mb-6 text-muted-foreground text-sm">
+          <p className="mb-4 text-muted-foreground text-sm sm:mb-6">
             Add your provider and choose the default LLM
           </p>
 
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-            <label
-              htmlFor="provider-picker"
-              className="whitespace-nowrap font-medium text-sm"
-            >
+          <div className="grid w-full gap-3 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center">
+            <label htmlFor="provider-picker" className="font-medium text-sm">
               Default Provider:
             </label>
             <Select
               value={defaultProviderId}
               onValueChange={onDefaultProviderChange}
             >
-              <SelectTrigger
-                id="provider-picker"
-                className="w-full flex-1 sm:max-w-xs"
-              >
+              <SelectTrigger id="provider-picker" className="w-full min-w-0">
                 <SelectValue placeholder="Select a provider" />
               </SelectTrigger>
               <SelectContent>
@@ -67,7 +61,7 @@ export const LlmProvidersHeader: FC<LlmProvidersHeaderProps> = ({
             <Button
               variant="outline"
               onClick={onAddProvider}
-              className="border-[var(--accent-orange)] bg-primary/10 text-[var(--accent-orange)] hover:bg-primary/20 hover:text-[var(--accent-orange)]"
+              className="w-full border-[var(--accent-orange)] bg-primary/10 text-[var(--accent-orange)] hover:bg-primary/20 hover:text-[var(--accent-orange)] md:w-auto"
             >
               <Plus className="h-4 w-4" />
               Add custom provider

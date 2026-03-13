@@ -283,9 +283,9 @@
     }
     50% {
       text-shadow:
-        0 0 20px rgba(214, 123, 68, 0.6),
-        0 0 40px rgba(214, 123, 68, 0.4),
-        0 0 60px rgba(214, 123, 68, 0.2);
+        0 0 20px oklch(from var(--primary) l c h / 0.6),
+        0 0 40px oklch(from var(--primary) l c h / 0.4),
+        0 0 60px oklch(from var(--primary) l c h / 0.2);
       transform: scale(1.02);
     }
     100% {

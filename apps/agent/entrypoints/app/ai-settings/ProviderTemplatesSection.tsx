@@ -39,7 +39,7 @@ export const ProviderTemplatesSection: FC<ProviderTemplatesSectionProps> = ({
 
   return (
     <Collapsible defaultOpen className="group/collapsible">
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md">
+      <div className="rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:shadow-md sm:p-6">
         <CollapsibleTrigger className="mb-4 flex w-full items-center justify-between text-left">
           <div>
             <h3 className="font-semibold text-lg">Quick provider templates</h3>
@@ -56,7 +56,7 @@ export const ProviderTemplatesSection: FC<ProviderTemplatesSectionProps> = ({
         </CollapsibleTrigger>
 
         <CollapsibleContent>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {filteredTemplates.map((template) => (
               <ProviderTemplateCard
                 key={template.id}
