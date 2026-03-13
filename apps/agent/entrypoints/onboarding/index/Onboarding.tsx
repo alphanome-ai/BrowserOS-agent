@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react'
 import { type FC, useEffect, useState } from 'react'
 import { NavLink } from 'react-router'
 // import { PillIndicator } from '@/components/elements/pill-indicator'
+import { SparklesBackground } from '@/components/elements/SparklesBackground'
 import { Button } from '@/components/ui/button'
 import { ONBOARDING_STARTED_EVENT } from '@/lib/constants/analyticsEvents'
 // import { productRepositoryShortUrl } from '@/lib/constants/productUrls'
@@ -27,10 +28,13 @@ export const Onboarding: FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <OnboardingHeader isMounted={mounted} />
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
+      <SparklesBackground className="z-0" />
+      <div className="relative z-10">
+        <OnboardingHeader isMounted={mounted} />
+      </div>
 
-      <main className="relative flex flex-1 items-center justify-center overflow-hidden px-6 py-16">
+      <main className="relative z-10 flex flex-1 items-center justify-center overflow-hidden px-6 py-16">
         <FocusGrid />
 
         <div className="relative w-full max-w-6xl">
@@ -40,14 +44,13 @@ export const Onboarding: FC = () => {
               className={`transition-all delay-100 duration-700 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
             /> */}
 
-            <h1
-              className={`text-balance font-semibold text-5xl leading-[1.1] tracking-tight transition-all delay-200 duration-700 md:text-7xl ${mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+            <div
+              className={`transition-all delay-200 duration-700 ${mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
             >
-              Welcome to{' '}
-              <span className="inline-block animate-glow-once text-foreground">
-                Fouwser
-              </span>
-            </h1>
+              <h1 className="relative z-10 text-balance font-semibold text-5xl leading-[1.1] tracking-tight md:text-7xl">
+                Welcome to <span className="text-foreground">Fouwser</span>
+              </h1>
+            </div>
 
             <p
               className={`mx-auto max-w-2xl text-pretty text-muted-foreground text-xl leading-relaxed transition-all delay-300 duration-700 md:text-2xl ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
@@ -95,7 +98,7 @@ export const Onboarding: FC = () => {
         </div>
       </main>
 
-      <footer className="border-border/40 border-t py-8">
+      <footer className="relative z-10 border-border/40 border-t py-8">
         <div className="mx-auto max-w-7xl px-6">
           <p className="text-center text-muted-foreground text-sm">
             Fouwser © {getCurrentYear()} - Alphanome.ai

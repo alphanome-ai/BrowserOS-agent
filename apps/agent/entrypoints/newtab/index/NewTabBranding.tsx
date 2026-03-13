@@ -12,11 +12,11 @@ export const NewTabBranding: FC = () => {
             damping: 20,
             stiffness: 300,
           }}
-          className="flex items-center justify-center"
+          className="flex w-full items-center justify-center py-3"
         >
-          <span className="font-semibold text-5xl tracking-tight">
+          <h1 className="font-semibold text-4xl tracking-tight sm:text-5xl md:text-6xl">
             Ask Fouwser
-          </span>
+          </h1>
         </motion.div>
       </div>
     </div>
