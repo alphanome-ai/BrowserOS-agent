@@ -16,6 +16,7 @@ import {
   GlowingBorder,
   GlowingElement,
 } from '@/components/elements/glowing-border'
+import { SparklesBackground } from '@/components/elements/SparklesBackground'
 import { TabPickerPopover } from '@/components/elements/tab-picker-popover'
 import { WorkspaceSelector } from '@/components/elements/workspace-selector'
 import { Button } from '@/components/ui/button'
@@ -328,9 +329,10 @@ export const NewTab = () => {
   }, [])
 
   return (
-    <div className="pt-[max(25vh,16px)]">
+    <div className="relative min-h-screen overflow-hidden pt-[max(25vh,16px)]">
+      <SparklesBackground className="z-0" />
       {/* Main content */}
-      <div className="relative mx-auto w-full max-w-3xl space-y-10">
+      <div className="relative z-10 mx-auto w-full max-w-3xl space-y-10">
         {/* Logo and branding */}
         <NewTabBranding />
         {/* Search bar with context */}

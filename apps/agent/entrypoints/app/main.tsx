@@ -17,7 +17,7 @@ if ($root) {
       <AuthProvider>
         <QueryProvider>
           <AnalyticsProvider>
-            <ThemeProvider>
+            <ThemeProvider defaultTheme="dark">
               <App />
               <Toaster />
             </ThemeProvider>

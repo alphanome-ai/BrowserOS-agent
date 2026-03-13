@@ -30,7 +30,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     themeStorage.getValue().then((savedTheme) => {
-      setThemeState(savedTheme ?? 'system')
+      setThemeState(savedTheme ?? defaultTheme ?? 'dark')
     })
 
     const unwatch = themeStorage.watch((newTheme) => {
@@ -40,7 +40,7 @@ export function ThemeProvider({
     })
 
     return () => unwatch()
-  }, [])
+  }, [defaultTheme])
 
   useEffect(() => {
     if (!theme) return
