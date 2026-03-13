@@ -22,7 +22,56 @@ import { stopAgentStorage } from '@/lib/stop-agent/stop-agent-storage'
 import { scheduledJobRuns } from './scheduledJobRuns'
 
 export default defineBackground(() => {
-  chrome.sidePanel.setOptions({ enabled: false })
+  const SIDEPANEL_STICKY_OPEN_KEY = 'sidepanelStickyOpen'
+  let sidepanelStickyOpen = false
+
+  const enableSidePanelEverywhere = async () => {
+    await chrome.sidePanel.setOptions({ enabled: true })
+    await chrome.sidePanel
+      .setPanelBehavior({ openPanelOnActionClick: true })
+      .catch(() => null)
+  }
+
+  const openSidePanelForWindowIfSticky = async (windowId?: number) => {
+    if (!sidepanelStickyOpen || windowId === undefined) return
+
+    await chrome.sidePanel.open({ windowId }).catch(() => null)
+  }
+
+  const setStickySidePanelOpen = async (
+    open: boolean,
+    sourceWindowId?: number,
+  ) => {
+    sidepanelStickyOpen = open
+    await chrome.storage.local.set({ [SIDEPANEL_STICKY_OPEN_KEY]: open })
+    if (!open) return
+
+    await enableSidePanelEverywhere().catch(() => null)
+
+    if (sourceWindowId !== undefined) {
+      await openSidePanelForWindowIfSticky(sourceWindowId)
+    }
+
+    const windows = await chrome.windows.getAll()
+    await Promise.all(
+      windows.map((window) => openSidePanelForWindowIfSticky(window.id)),
+    )
+  }
+
+  const restoreStickySidePanel = async () => {
+    await enableSidePanelEverywhere().catch(() => null)
+
+    const saved = await chrome.storage.local.get(SIDEPANEL_STICKY_OPEN_KEY)
+    sidepanelStickyOpen = Boolean(saved[SIDEPANEL_STICKY_OPEN_KEY])
+    if (!sidepanelStickyOpen) return
+
+    const windows = await chrome.windows.getAll()
+    await Promise.all(
+      windows.map((window) => openSidePanelForWindowIfSticky(window.id)),
+    )
+  }
+
+  restoreStickySidePanel().catch(() => null)
 
   Capabilities.initialize().catch(() => null)
   setupLlmProvidersBackupToBrowserOS()
@@ -33,8 +82,23 @@ export default defineBackground(() => {
 
   chrome.action.onClicked.addListener(async (tab) => {
     if (tab.id) {
-      await toggleSidePanel(tab.id)
+      const { opened } = await toggleSidePanel(tab.id)
+      await setStickySidePanelOpen(opened, tab.windowId)
     }
+  })
+
+  chrome.tabs.onActivated.addListener(async ({ windowId }) => {
+    await openSidePanelForWindowIfSticky(windowId)
+  })
+
+  chrome.tabs.onCreated.addListener(async (tab) => {
+    if (!tab.active) return
+    await openSidePanelForWindowIfSticky(tab.windowId)
+  })
+
+  chrome.windows.onFocusChanged.addListener(async (windowId) => {
+    if (windowId === chrome.windows.WINDOW_ID_NONE) return
+    await openSidePanelForWindowIfSticky(windowId)
   })
 
   onOpenSidePanelWithSearch('open', async (messageData) => {
@@ -42,9 +106,11 @@ export default defineBackground(() => {
       active: true,
       currentWindow: true,
     })
-    const currentTab = currentTabsList?.[0]?.id
+    const currentTabInfo = currentTabsList?.[0]
+    const currentTab = currentTabInfo?.id
     if (currentTab) {
       const { opened } = await openSidePanel(currentTab)
+      await setStickySidePanelOpen(opened, currentTabInfo?.windowId)
 
       if (opened) {
         setTimeout(() => {

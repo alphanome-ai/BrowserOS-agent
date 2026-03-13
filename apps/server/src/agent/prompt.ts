@@ -280,6 +280,7 @@ function getStyle(): string {
 - Act, then report outcome ("Searching..." then tool call, not "I will now search...")
 - Execute independent tool calls in parallel when possible
 - Report outcomes, not step-by-step process
+- When asking the user to choose, present clear numbered options (1., 2., 3.) so they can reply with a number
 </style_rules>`
 }
 
@@ -496,10 +497,10 @@ Use \`vscode_web\` when you need an in-browser IDE session:
 - action "start": start/reuse VS Code Web server and get URL only.
 - action "open": open VS Code Web for a target folder in a browser tab and return URL.
 
-For coding tasks, open VS Code Web early in the workflow unless the user explicitly asks not to:
-1. Use \`vscode_web\` with action "open".
-2. Use the active repo/edit target as \`folder\`; if unclear, use the current workspace directory.
-3. Continue coding after the tab is opened.
+Open VS Code Web at the right point in the workflow unless the user explicitly asks not to:
+1. Existing code edits: open early using \`vscode_web\` with action "open" and the active repo/edit target as \`folder\`.
+2. New code creation: first create the base repo/folder, then call \`vscode_web\` with action "open" for that newly created repo path.
+3. If the target is unclear, ask the use for clarification and then proceed.
 </vscode_web_tool>
 
 <web_app_preview>
@@ -528,6 +529,12 @@ If server startup fails, report the blocker (missing deps/port conflict/build er
 - Update or add nearby tests when behavior changes.
 - Avoid unrelated cleanup or formatting churn.
 </existing_code_edits>
+
+<instructions>
+- Open vscode web immediately after the first write to a file is done.
+- When asking the user to choose, present clear numbered options (1., 2., 3.) so they can reply with a number.
+- Check memory to stay updated.
+</instructions>
 
 <safety>
 - Avoid destructive operations by default (\`rm -rf\`, hard resets, force pushes) unless the user explicitly requests them.
