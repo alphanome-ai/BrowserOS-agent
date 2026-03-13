@@ -1,6 +1,5 @@
 import { motion } from 'motion/react'
 import type { FC } from 'react'
-import ProductLogoSvg from '@/assets/product_logo.svg'
 
 export const NewTabBranding: FC = () => {
   return (
@@ -13,9 +12,11 @@ export const NewTabBranding: FC = () => {
             damping: 20,
             stiffness: 300,
           }}
-          className="flex h-20 w-20 items-center justify-center rounded-xl bg-transparent"
+          className="flex items-center justify-center"
         >
-          <img src={ProductLogoSvg} alt="Fouwser" className="h-20 w-20" />
+          <span className="font-semibold text-5xl tracking-tight">
+            Ask Fouwser
+          </span>
         </motion.div>
       </div>
     </div>

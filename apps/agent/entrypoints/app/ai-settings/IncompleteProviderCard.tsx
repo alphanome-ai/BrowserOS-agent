@@ -29,11 +29,11 @@ export const IncompleteProviderCard: FC<IncompleteProviderCardProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="flex w-full items-center gap-4 rounded-xl border border-amber-500/50 border-dashed bg-amber-500/5 p-4">
+    <div className="flex w-full flex-wrap items-start gap-3 rounded-xl border border-amber-500/50 border-dashed bg-amber-500/5 p-4 sm:items-center sm:gap-4">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500">
         <ProviderIcon type={provider.type as ProviderType} size={24} />
       </div>
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 basis-[14rem]">
         <div className="mb-1 flex items-center gap-2">
           <span className="font-semibold">{provider.name}</span>
         </div>
@@ -42,8 +42,13 @@ export const IncompleteProviderCard: FC<IncompleteProviderCardProps> = ({
           {provider.baseUrl && ` • ${provider.baseUrl}`}
         </p>
       </div>
-      <div className="flex shrink-0 items-center gap-2">
-        <Button variant="outline" size="sm" onClick={onAddKeys}>
+      <div className="ml-auto flex w-full shrink-0 items-center justify-end gap-2 sm:w-auto">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onAddKeys}
+          className="flex-1 sm:flex-none"
+        >
           <KeyRound className="mr-1.5 h-4 w-4" />
           Add Keys
         </Button>

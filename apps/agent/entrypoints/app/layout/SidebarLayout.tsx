@@ -1,6 +1,6 @@
 import { Menu } from 'lucide-react'
 import type { FC } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { AppSidebar } from '@/components/sidebar/AppSidebar'
 import { Button } from '@/components/ui/button'
@@ -10,8 +10,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { SETTINGS_PAGE_VIEWED_EVENT } from '@/lib/constants/analyticsEvents'
 import { track } from '@/lib/metrics/track'
 import { RpcClientProvider } from '@/lib/rpc/RpcClientProvider'
-
-const COLLAPSE_DELAY = 150
+import { cn } from '@/lib/utils'
 
 export const SidebarLayout: FC = () => {
   const location = useLocation()
@@ -19,7 +18,6 @@ export const SidebarLayout: FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [shortcutsDialogOpen, setShortcutsDialogOpen] = useState(false)
-  const collapseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const openShortcuts = useCallback(() => {
     setShortcutsDialogOpen(true)
@@ -31,28 +29,6 @@ export const SidebarLayout: FC = () => {
 
   useEffect(() => {
     setMobileOpen(false)
-  }, [])
-
-  useEffect(() => {
-    return () => {
-      if (collapseTimeoutRef.current) {
-        clearTimeout(collapseTimeoutRef.current)
-      }
-    }
-  }, [])
-
-  const handleMouseEnter = useCallback(() => {
-    if (collapseTimeoutRef.current) {
-      clearTimeout(collapseTimeoutRef.current)
-      collapseTimeoutRef.current = null
-    }
-    setSidebarOpen(true)
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    collapseTimeoutRef.current = setTimeout(() => {
-      setSidebarOpen(false)
-    }, COLLAPSE_DELAY)
   }, [])
 
   if (isMobile) {
@@ -92,18 +68,22 @@ export const SidebarLayout: FC = () => {
   return (
     <RpcClientProvider>
       <div className="relative min-h-screen bg-background">
-        {/* Sidebar - fixed overlay */}
-        {/* biome-ignore lint/a11y/noStaticElementInteractions: hover interactions needed */}
-        <div
-          className="fixed inset-y-0 left-0 z-40"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <AppSidebar expanded={sidebarOpen} onOpenShortcuts={openShortcuts} />
+        {/* Sidebar - fixed with manual toggle */}
+        <div className="fixed inset-y-0 left-0 z-40">
+          <AppSidebar
+            expanded={sidebarOpen}
+            onOpenShortcuts={openShortcuts}
+            onToggleExpanded={() => setSidebarOpen((prev) => !prev)}
+          />
         </div>
 
-        {/* Main content - full width, centered */}
-        <main className="min-h-screen overflow-y-auto">
+        {/* Main content - offset by sidebar width */}
+        <main
+          className={cn(
+            'min-h-screen overflow-y-auto transition-[padding-left] duration-200',
+            sidebarOpen ? 'pl-64' : 'pl-14',
+          )}
+        >
           <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
             <Outlet />
           </div>

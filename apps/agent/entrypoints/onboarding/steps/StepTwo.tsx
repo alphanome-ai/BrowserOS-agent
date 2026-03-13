@@ -89,7 +89,7 @@ export const StepTwo = ({ direction, onContinue }: StepTwoProps) => {
   if (state === 'magic-link-sent') {
     return (
       <StepTransition direction={direction}>
-        <div className="flex h-full flex-col items-center justify-center">
+        <div className="flex min-h-[550px] flex-col items-center justify-start pt-2 md:justify-center md:pt-0">
           <div className="w-full max-w-md space-y-6 text-center">
             <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
               <CheckCircle2 className="size-6 text-green-600 dark:text-green-400" />
@@ -129,7 +129,7 @@ export const StepTwo = ({ direction, onContinue }: StepTwoProps) => {
 
   return (
     <StepTransition direction={direction}>
-      <div className="flex h-full flex-col items-center justify-center">
+      <div className="flex min-h-[550px] flex-col items-center justify-start pt-2 md:justify-center md:pt-0">
         <div className="w-full max-w-md space-y-6">
           <div className="space-y-2 text-center">
             <h2 className="font-bold text-3xl tracking-tight">

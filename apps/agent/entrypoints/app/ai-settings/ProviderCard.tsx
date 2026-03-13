@@ -36,7 +36,7 @@ export const ProviderCard: FC<ProviderCardProps> = ({
     <label
       htmlFor={inputId}
       className={cn(
-        'group flex w-full cursor-pointer items-center gap-4 rounded-xl border p-4 text-left transition-all',
+        'group flex w-full cursor-pointer flex-wrap items-start gap-3 rounded-xl border p-4 text-left transition-all sm:items-center sm:gap-4',
         isSelected
           ? 'border-[var(--accent-orange)] bg-primary/5 shadow-md'
           : 'border-border bg-card hover:border-[var(--accent-orange)]/50 hover:shadow-sm',
@@ -67,7 +67,7 @@ export const ProviderCard: FC<ProviderCardProps> = ({
           <ProviderIcon type={provider.type} size={24} />
         )}
       </div>
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 basis-[14rem]">
         <div className="mb-1 flex items-center gap-2">
           <span className="font-semibold">{provider.name}</span>
           {isSelected && (
@@ -105,17 +105,23 @@ export const ProviderCard: FC<ProviderCardProps> = ({
         </p>
       </div>
       {!isBuiltIn && (
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 sm:w-auto sm:flex-nowrap">
           <Button
             variant="outline"
             size="sm"
             disabled={isTesting}
             onClick={() => onTest?.()}
+            className="flex-1 sm:flex-none"
           >
             {isTesting && <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />}
             {isTesting ? 'Testing...' : 'Test'}
           </Button>
-          <Button variant="outline" size="sm" onClick={() => onEdit?.()}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onEdit?.()}
+            className="flex-1 sm:flex-none"
+          >
             Edit
           </Button>
           <Button
