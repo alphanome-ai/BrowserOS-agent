@@ -5,9 +5,10 @@ import {
   Info,
   // MessageSquare,
   Palette,
+  PlugZap,
   RotateCcw,
   // Server,
-  Sparkles,
+  // Sparkles,
 } from 'lucide-react'
 import type { FC } from 'react'
 import { NavLink, useLocation } from 'react-router'
@@ -25,6 +26,7 @@ type NavItem = {
 
 const settingsNavItems: NavItem[] = [
   { name: 'Fouwser AI', to: '/settings/ai', icon: Bot },
+  { name: 'Integrations', to: '/connect-apps', icon: PlugZap },
   // { name: 'LLM Chat & Hub', to: '/settings/chat', icon: MessageSquare },
   // { name: 'Fouwser as MCP', to: '/settings/mcp', icon: Server },
   {
@@ -33,7 +35,7 @@ const settingsNavItems: NavItem[] = [
     icon: Palette,
     feature: Feature.CUSTOMIZATION_SUPPORT,
   },
-  { name: 'Agent Soul', to: '/settings/soul', icon: Sparkles },
+  // { name: 'Agent Soul', to: '/settings/soul', icon: Sparkles },
   // { name: 'Explore Features', to: '/onboarding/features', icon: Compass },
   { name: 'Revisit Onboarding', to: '/onboarding', icon: RotateCcw },
 ]
