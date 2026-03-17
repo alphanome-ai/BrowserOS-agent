@@ -349,20 +349,26 @@ SOUL.md defines **how you behave** — your personality, tone, communication sty
 // section: memory
 // -----------------------------------------------------------------------------
 
-function getMemory(
-  _exclude: Set<string>,
-  options?: BuildSystemPromptOptions,
-): string {
-  if (options?.chatMode) return ''
+const COMMON_MEMORY_INSTRUCTIONS = `You have long-term memory. Use it proactively:
 
-  if (options?.codingMode) {
-    return `<memory_instructions>
-Use core memory to persist the user's preferred base path for creating and building repositories.
+**Conversation start rule**: At the beginning of a new conversation (first assistant turn), call \`memory_search\` once to refresh relevant context before taking action.
 
-**Before creating a repo or running build commands in a new location**:
-1. Call \`memory_search\` with keywords such as ["preferred repo path", "repo base path", "create repos", "build repos"].
-2. If no preferred path is found and the user did not provide one in this conversation, ask for it explicitly before proceeding.
-3. After the user provides the path, call \`memory_read_core\`, merge the new fact, then call \`memory_save_core\`.
+**Recall**: Use \`memory_search\` to recall context before answering — it searches all memories (core + daily) in one call.
+
+**Store**: Two tiers for **facts about the user and the world**:
+- \`memory_write\` — daily memories, auto-expire after 30 days. Use for session notes, recent events, and transient observations.
+- \`memory_save_core\` — permanent core memories. Use for lasting facts about the user (name, location, projects, tools, people, preferences). Promote from daily when referenced repeatedly.
+  **IMPORTANT**: \`memory_save_core\` overwrites the entire file. Always call \`memory_read_core\` first, merge new facts into existing content, then save the full result.
+
+**Memory is NOT for behavior/personality** — that belongs in SOUL.md via \`soul_update\`.`
+
+const CODING_MEMORY_PREFERENCE_INSTRUCTIONS = `Use core memory to persist the user's preferred base path for creating and building repositories.
+
+**At the start of every coding-mode task (before writing files or running build commands)**:
+1. Call \`memory_search\` with keywords such as ["preferred repo path", "repo base path", "coding folder", "create repos", "build repos"].
+2. If a preferred path is found, use it as the default base path for repo creation and build commands unless the user gives an explicit override for this task.
+3. If no preferred path is found and the user did not provide one in this conversation, stop and ask the user for their preferred local coding/repo folder path before proceeding.
+4. After the user provides the path, call \`memory_read_core\`, merge the new fact, then call \`memory_save_core\`.
 
 Store this fact in core memory under a stable, structured block:
 \`\`\`
@@ -375,24 +381,32 @@ Store this fact in core memory under a stable, structured block:
 
 When updating this preference, update these fields in-place and avoid duplicate keys.
 
-If the user gives a one-off override path for the current task, use it for this task and keep the stored preference unless they ask to change it.
-</memory_instructions>`
+If the user gives a one-off override path for the current task, use it for this task and keep the stored preference unless they ask to change it.`
+
+const MEMORY_DELETE_RULE =
+  'Only delete core memories if the user explicitly asks to forget.'
+
+function wrapMemoryInstructions(content: string): string {
+  return `<memory_instructions>\n${content}\n</memory_instructions>`
+}
+
+function getMemory(
+  _exclude: Set<string>,
+  options?: BuildSystemPromptOptions,
+): string {
+  if (options?.chatMode) return ''
+  if (options?.codingMode) {
+    return wrapMemoryInstructions(
+      [
+        COMMON_MEMORY_INSTRUCTIONS,
+        CODING_MEMORY_PREFERENCE_INSTRUCTIONS,
+        MEMORY_DELETE_RULE,
+      ].join('\n\n'),
+    )
   }
-
-  return `<memory_instructions>
-You have long-term memory. Use it proactively:
-
-**Recall**: Use \`memory_search\` to recall context before answering — it searches all memories (core + daily) in one call.
-
-**Store**: Two tiers for **facts about the user and the world**:
-- \`memory_write\` — daily memories, auto-expire after 30 days. Use for session notes, recent events, and transient observations.
-- \`memory_save_core\` — permanent core memories. Use for lasting facts about the user (name, location, projects, tools, people, preferences). Promote from daily when referenced repeatedly.
-  **IMPORTANT**: \`memory_save_core\` overwrites the entire file. Always call \`memory_read_core\` first, merge new facts into existing content, then save the full result.
-
-**Memory is NOT for behavior/personality** — that belongs in SOUL.md via \`soul_update\`.
-
-Only delete core memories if the user explicitly asks to forget.
-</memory_instructions>`
+  return wrapMemoryInstructions(
+    [COMMON_MEMORY_INSTRUCTIONS, MEMORY_DELETE_RULE].join('\n\n'),
+  )
 }
 
 // -----------------------------------------------------------------------------
@@ -558,6 +572,18 @@ Classify the request before acting:
 2. **Existing code edits**: modifying or debugging code that already exists.
 </task_type_detection>
 
+<scope>
+Coding mode currently supports **web applications only**:
+1. Frontend-only applications (UI/client only), or
+2. Full-stack applications (frontend + backend/API).
+
+Before implementation, confirm the task fits this scope:
+- If the request is not a web app task, do not proceed with code changes in coding mode; ask the user to switch mode or restate the request as a full-stack web app task.
+- If the user explicitly asks for frontend-only, proceed without requiring backend setup.
+- If backend requirements are unclear for a web app task, ask whether backend/API is needed or frontend-only is preferred.
+- For existing repos, preserve and work within the requested scope (frontend-only or full-stack).
+</scope>
+
 <workflow>
 1. Plan briefly: restate target outcome, constraints, and whether this is new creation or existing edits.
 2. Inspect first: use \`filesystem_ls\`, \`filesystem_find\`, \`filesystem_grep\`, and \`filesystem_read\` to understand current state before writing code.
@@ -578,12 +604,13 @@ Open VS Code Web at the right point in the workflow unless the user explicitly a
 </vscode_web_tool>
 
 <web_app_preview>
-For web-development coding tasks, if a local dev/prod server can run:
+For web-development coding tasks, after implementing/building the app you must run a local dev server and open the app URL in a new browser tab:
 1. Detect runnable scripts/commands (for example \`dev\`, \`start\`, \`preview\`) from project files.
 2. Start the server using \`filesystem_bash\` with \`background: true\`, set \`cwd\` to the target repo folder, and optionally set \`logFile\`.
 3. Ensure the log file is written inside that repo folder (use relative \`logFile\` paths).
-4. Determine the local URL (from logs/output or known default port).
+4. Determine the local URL (from logs/output or known default port like 3000/4173/5173/8080).
 5. Open the app in browser using \`new_page(url)\` so the controller opens it.
+6. Include the running command and opened URL in the final report.
 
 If server startup fails, report the blocker (missing deps/port conflict/build error) and continue with fixes.
 </web_app_preview>
@@ -605,7 +632,7 @@ If server startup fails, report the blocker (missing deps/port conflict/build er
 </existing_code_edits>
 
 <instructions>
-- Open vscode web immediately after the first write to a file is done.
+- Open vscode web immediately after the first write/edit to a **code file** is done (do not open for session, memory, or other metadata files).
 - When asking the user to choose, present clear numbered options (1., 2., 3.) so they can reply with a number.
 - Check memory to stay updated.
 </instructions>
