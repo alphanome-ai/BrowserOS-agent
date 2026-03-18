@@ -5,6 +5,7 @@
  */
 
 import { appendFile, mkdir, utimes } from 'node:fs/promises'
+import { homedir } from 'node:os'
 import path from 'node:path'
 import { createAgentUIStreamResponse, type UIMessage } from 'ai'
 import { AiSdkAgent } from '../../agent/ai-sdk-agent'
@@ -16,7 +17,7 @@ import { getSessionsDir } from '../../lib/browseros-dir'
 import type { KlavisClient } from '../../lib/clients/klavis/klavis-client'
 import { resolveLLMConfig } from '../../lib/clients/llm/config'
 import { logger } from '../../lib/logger'
-// import { resolveCodingWorkingDir } from '../../lib/preferences/coding-working-dir'
+import { resolveCodingWorkingDir } from '../../lib/preferences/coding-working-dir'
 import { ensureVsCodeInstalledForCoding } from '../../lib/prerequisites/vscode'
 import type { ToolRegistry } from '../../tools/tool-registry'
 import type { BrowserContext, ChatRequest } from '../types'
@@ -44,10 +45,9 @@ export class ChatService {
 
     const llmConfig = await resolveLLMConfig(request, this.deps.browserosId)
 
-    const workingDir = await this.resolveSessionDir(request)
-    const conversationLogPath = await this.ensureConversationLogPath(
-      request.conversationId,
-    )
+    const sessionDir = await this.resolveSessionDir(request.conversationId)
+    const workingDir = await this.resolveWorkingDir(request)
+    const conversationLogPath = await this.ensureConversationLogPath(sessionDir)
 
     const agentConfig: ResolvedAgentConfig = {
       conversationId: request.conversationId,
@@ -287,22 +287,39 @@ export class ChatService {
     return [...managed, ...custom].join(',')
   }
 
-  private async resolveSessionDir(request: ChatRequest): Promise<string> {
-    const dir = request.userWorkingDir
-      ? request.userWorkingDir
-      : path.join(getSessionsDir(), request.conversationId)
+  private async resolveSessionDir(conversationId: string): Promise<string> {
+    const dir = path.join(getSessionsDir(), conversationId)
     await mkdir(dir, { recursive: true })
-    if (!request.userWorkingDir) {
-      const now = new Date()
-      await utimes(dir, now, now).catch(() => {})
-    }
+    const now = new Date()
+    await utimes(dir, now, now).catch(() => {})
     return dir
   }
 
-  private async ensureConversationLogPath(
-    conversationId: string,
-  ): Promise<string> {
-    const sessionDir = path.join(getSessionsDir(), conversationId)
+  private async resolveWorkingDir(request: ChatRequest): Promise<string> {
+    const fallbackDir = path.join(homedir(), 'Downloads')
+
+    if (request.mode === 'coding') {
+      const dir = await resolveCodingWorkingDir(
+        request.userWorkingDir,
+        fallbackDir,
+      )
+      logger.info('Resolved working directory', {
+        mode: request.mode,
+        workingDir: dir,
+      })
+      return dir
+    }
+
+    const dir = request.userWorkingDir ?? fallbackDir
+    await mkdir(dir, { recursive: true })
+    logger.info('Resolved working directory', {
+      mode: request.mode,
+      workingDir: dir,
+    })
+    return dir
+  }
+
+  private async ensureConversationLogPath(sessionDir: string): Promise<string> {
     await mkdir(sessionDir, { recursive: true })
     return path.join(sessionDir, 'conversation.jsonl')
   }

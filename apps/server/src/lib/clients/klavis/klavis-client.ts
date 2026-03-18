@@ -30,9 +30,11 @@ export interface UserIntegration {
 
 export class KlavisClient {
   private baseUrl: string
+  private apiKey?: string
 
-  constructor(baseUrl?: string) {
+  constructor(baseUrl?: string, apiKey?: string) {
     this.baseUrl = baseUrl || EXTERNAL_URLS.KLAVIS_PROXY
+    this.apiKey = apiKey || process.env.KLAVIS_API_KEY
   }
 
   private async request<T>(
@@ -47,10 +49,17 @@ export class KlavisClient {
     )
 
     try {
-      const response = await fetch(`${this.baseUrl}${path}`, {
+      const url = new URL(path, this.baseUrl).toString()
+      const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
+          ...(this.apiKey
+            ? {
+                Authorization: `Bearer ${this.apiKey}`,
+                'x-api-key': this.apiKey,
+              }
+            : {}),
         },
         body: body ? JSON.stringify(body) : undefined,
         signal: controller.signal,

@@ -6,11 +6,18 @@
  * Centralized external service URLs.
  */
 
+function getEnv(...keys: string[]): string | undefined {
+  for (const key of keys) {
+    const value = process.env[key]?.trim()
+    if (value) return value
+  }
+  return undefined
+}
+
 export const EXTERNAL_URLS = {
-  // KLAVIS_PROXY: 'https://llm.browseros.com/klavis',
-  // POSTHOG_DEFAULT: 'https://us.i.posthog.com',
-  // CODEGEN_SERVICE: 'https://graph.browseros.com',
-  KLAVIS_PROXY: '',
-  POSTHOG_DEFAULT: '',
-  CODEGEN_SERVICE: '',
+  // Prefer explicit env config, fall back to Klavis cloud API.
+  KLAVIS_PROXY:
+    getEnv('KLAVIS_PROXY_URL', 'KLAVIS_PROXY') || 'https://api.klavis.ai/v1',
+  POSTHOG_DEFAULT: getEnv('POSTHOG_HOST', 'POSTHOG_DEFAULT') || '',
+  CODEGEN_SERVICE: getEnv('CODEGEN_SERVICE_URL', 'CODEGEN_SERVICE') || '',
 } as const

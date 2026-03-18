@@ -1,5 +1,6 @@
 import type { ToolSet } from 'ai'
 import { createBashTool } from './bash'
+import { createBashCodingTool } from './bash-coding'
 import { createEditTool } from './edit'
 import { createFindTool } from './find'
 import { createGrepTool } from './grep'
@@ -13,6 +14,7 @@ export function buildFilesystemToolSet(cwd: string): ToolSet {
     filesystem_write: createWriteTool(cwd),
     filesystem_edit: createEditTool(cwd),
     filesystem_bash: createBashTool(cwd),
+    filesystem_bash_coding: createBashCodingTool(cwd),
     filesystem_grep: createGrepTool(cwd),
     filesystem_find: createFindTool(cwd),
     filesystem_ls: createLsTool(cwd),
