@@ -47,9 +47,10 @@ export const AGENT_SUGGESTIONS: Suggestion[] = [
 
 export const CODING_SUGGESTIONS: Suggestion[] = [
   {
-    display: 'Build a personal productivity dashboard',
+    display: 'Build a personal productivity web app',
     prompt:
-      'Build a single-page personal productivity dashboard using React, TypeScript, Vite, and Tailwind CSS for styling, structured in a responsive three-column grid layout. Implement state management strictly using native React hooks and ensure all user data perfectly persists across page reloads via localStorage. Use productivity-app as the folder name to create the code. Create a Task component with add, toggle, delete, and filter functionality, alongside a Notes component that uses a modal interface for managing editable text cards. Integrate a lightweight charting library like Recharts to display a smooth line chart tracking the users daily task completion percentage over the last seven days. Polish the interface with a modern, clean color palette, utilizing consistent Tailwind spacing and interactive hover transitions for a premium feel.',
+      // 'Build a modern, fast, production-ready personal productivity SaaS web app (Notion/TickTick/Todoist quality) using Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, lucide-react, React hooks + Server Actions, and Prisma with Vercel Postgres (or SQLite fallback), plus NextAuth (email + Google). Include dashboard insights, task management (priority, due dates, drag-drop, completion), habits with streaks and heatmap, goals with milestones/progress, rich notes with tags/search, and a Pomodoro timer with session tracking; make it fully responsive, animated, dark/light mode, accessible, SEO-ready, and Vercel zero-config deployable. Use a clean /app /components /lib /db /actions architecture with server components by default, loading skeletons, error boundaries, code splitting, env support, sample seed data, Prisma schema, and a README with Vercel deploy steps; then run the dev server and open/share the preview URL.',
+      'Build a simple landing page for a toy store as a SPA using react js, use vite.',
     icon: '📊',
   },
   // {

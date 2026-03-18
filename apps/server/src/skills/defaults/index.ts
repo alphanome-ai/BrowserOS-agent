@@ -1,5 +1,14 @@
+import codingWebApplications from './coding-web-applications/SKILL.md' with {
+  type: 'text',
+}
 import comparePrices from './compare-prices/SKILL.md' with { type: 'text' }
+import databasePostgresSupabase from './database-postgres-supabase/SKILL.md' with {
+  type: 'text',
+}
 import deepResearch from './deep-research/SKILL.md' with { type: 'text' }
+import deployWebApplicationVercel from './deploy-web-application-vercel/SKILL.md' with {
+  type: 'text',
+}
 import extractData from './extract-data/SKILL.md' with { type: 'text' }
 import fillForm from './fill-form/SKILL.md' with { type: 'text' }
 import findAlternatives from './find-alternatives/SKILL.md' with {
@@ -18,6 +27,9 @@ import summarizePage from './summarize-page/SKILL.md' with { type: 'text' }
 type DefaultSkill = { id: string; content: string }
 
 export const DEFAULT_SKILLS: DefaultSkill[] = [
+  { id: 'coding-web-applications', content: codingWebApplications },
+  { id: 'database-postgres-supabase', content: databasePostgresSupabase },
+  { id: 'deploy-web-application-vercel', content: deployWebApplicationVercel },
   { id: 'summarize-page', content: summarizePage },
   { id: 'deep-research', content: deepResearch },
   { id: 'extract-data', content: extractData },
