@@ -1,4 +1,4 @@
-import { resolve } from 'node:path'
+import { isAbsolute, relative, resolve } from 'node:path'
 import { z } from 'zod'
 import {
   getVsCodeWebUiUrlForFolder,
@@ -7,6 +7,11 @@ import {
 import { defineTool } from './framework'
 
 const ACTIONS = ['start', 'open'] as const
+
+function isWithinOrEqual(basePath: string, targetPath: string): boolean {
+  const rel = relative(basePath, targetPath)
+  return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel))
+}
 
 export const vscode_web = defineTool({
   name: 'vscode_web',
@@ -30,7 +35,7 @@ export const vscode_web = defineTool({
       .string()
       .optional()
       .describe(
-        'Base directory for resolving relative folder paths (defaults to process cwd).',
+        'Base directory for resolving relative folder paths (defaults to agent working directory).',
       ),
     forceNewTab: z
       .boolean()
@@ -41,8 +46,23 @@ export const vscode_web = defineTool({
       ),
   }),
   handler: async (args, ctx, response) => {
-    const baseDir = args.cwd ? resolve(args.cwd) : process.cwd()
+    const workingDir = resolve(ctx.directories.workingDir)
+    const baseDir = args.cwd ? resolve(args.cwd) : workingDir
+
+    if (!isWithinOrEqual(workingDir, baseDir)) {
+      response.error(
+        `vscode_web cwd must be within working directory (${workingDir}). Received: ${baseDir}`,
+      )
+      return
+    }
+
     const folderPath = args.folder ? resolve(baseDir, args.folder) : baseDir
+    if (!isWithinOrEqual(workingDir, folderPath)) {
+      response.error(
+        `vscode_web folder must be within working directory (${workingDir}). Received: ${folderPath}`,
+      )
+      return
+    }
 
     const url =
       args.action === 'start'

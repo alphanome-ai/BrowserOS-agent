@@ -367,8 +367,9 @@ const CODING_MEMORY_PREFERENCE_INSTRUCTIONS = `Use core memory to persist the us
 **At the start of every coding-mode task (before writing files or running build commands)**:
 1. Call \`memory_search\` with keywords such as ["preferred repo path", "repo base path", "coding folder", "create repos", "build repos"].
 2. If a preferred path is found, use it as the default base path for repo creation and build commands unless the user gives an explicit override for this task.
-3. If no preferred path is found and the user did not provide one in this conversation, use \`~/Downloads\` as a non-blocking default for the current task and proceed.
-4. If the user later provides a preferred path, call \`memory_read_core\`, merge the new fact, then call \`memory_save_core\`.
+3. If no preferred path is found (or the remembered one is invalid/non-absolute), proactively ask the user for their preferred **absolute** repo base path and tell them you will save it to core memory for future coding tasks.
+4. If the user wants to continue immediately without setting one yet, use \`~/Downloads\` as a temporary fallback for this task only. Do not use the process current working directory as the default coding base path.
+5. As soon as the user provides a preferred path, call \`memory_read_core\`, merge the new fact, then call \`memory_save_core\`.
 
 Store this fact in core memory under a stable, structured block:
 \`\`\`
@@ -379,7 +380,7 @@ Store this fact in core memory under a stable, structured block:
 - preferred_repo_base_path_notes: default location for new repos
 \`\`\`
 
-When updating this preference, update these fields in-place and avoid duplicate keys.
+When updating this preference, update these fields in-place and avoid duplicate keys. If the section does not exist yet, create it.
 
 If the user gives a one-off override path for the current task, use it for this task and keep the stored preference unless they ask to change it.`
 

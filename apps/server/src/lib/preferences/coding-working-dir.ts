@@ -1,5 +1,6 @@
-import { mkdir } from 'node:fs/promises'
-import { isAbsolute, relative, resolve } from 'node:path'
+import { mkdir, writeFile } from 'node:fs/promises'
+import { homedir } from 'node:os'
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import { getCoreMemoryPath } from '../browseros-dir'
 
 function extractLastPreferredRepoBasePath(coreMemory: string): string | null {
@@ -19,28 +20,57 @@ function isWithinBasePath(targetPath: string, basePath: string): boolean {
 }
 
 async function readPreferredRepoBasePath(): Promise<string | null> {
-  const corePath = getCoreMemoryPath()
+  const corePath = await ensureCoreMemoryFile()
   const file = Bun.file(corePath)
-  if (!(await file.exists())) return null
   const content = await file.text()
   if (!content.trim()) return null
   return extractLastPreferredRepoBasePath(content)
 }
 
+async function ensureCoreMemoryFile(): Promise<string> {
+  const corePath = getCoreMemoryPath()
+  await mkdir(dirname(corePath), { recursive: true })
+  const file = Bun.file(corePath)
+  if (await file.exists()) return corePath
+
+  await writeFile(
+    corePath,
+    '# Core Memory\n\n# Add preferences below.\n',
+    'utf-8',
+  )
+  return corePath
+}
+
+function resolveCodingFallbackDir(
+  userWorkingDir: string | undefined,
+  fallbackWorkingDir: string | undefined,
+): string {
+  return resolve(
+    userWorkingDir ?? fallbackWorkingDir ?? join(homedir(), 'Downloads'),
+  )
+}
+
 export async function resolveCodingWorkingDir(
   userWorkingDir?: string,
+  fallbackWorkingDir?: string,
 ): Promise<string> {
   const preferredPathRaw = await readPreferredRepoBasePath()
   if (!preferredPathRaw) {
-    throw new Error(
-      'Coding mode requires preferred_repo_base_path in core memory. Ask the user for their preferred repo path, then save it to core memory before running coding tasks.',
+    const fallbackDir = resolveCodingFallbackDir(
+      userWorkingDir,
+      fallbackWorkingDir,
     )
+    await mkdir(fallbackDir, { recursive: true })
+    return fallbackDir
   }
 
   if (!isAbsolute(preferredPathRaw)) {
-    throw new Error(
-      `Invalid preferred_repo_base_path in core memory: "${preferredPathRaw}" must be an absolute path.`,
+    const fallbackDir = resolveCodingFallbackDir(
+      userWorkingDir,
+      fallbackWorkingDir,
     )
+    await mkdir(fallbackDir, { recursive: true })
+    return fallbackDir
   }
 
   const preferredPath = resolve(preferredPathRaw)
