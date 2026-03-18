@@ -1,7 +1,10 @@
 import type { SkillMeta } from './types'
 
 const SKILL_BEHAVIORAL_INSTRUCTION = `The following skills provide specialized instructions for specific tasks.
+Proactively review these skills at the start of each task and identify likely matches before taking action.
 When a task matches a skill's description, use filesystem_read to load the SKILL.md at the listed location before proceeding.
+If multiple skills are relevant, load the primary skill first, then load additional supporting skills as needed.
+Do not wait for the user to explicitly name the skill if the task clearly matches.
 When a skill references relative paths (e.g., scripts/), resolve them against the skill's directory (the parent of SKILL.md) and use absolute paths in tool calls.`
 
 function escapeXml(str: string): string {
