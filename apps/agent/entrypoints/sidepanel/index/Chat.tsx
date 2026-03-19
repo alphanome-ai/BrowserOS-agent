@@ -1,5 +1,6 @@
 import { Loader2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { createBrowserOSAction } from '@/lib/chat-actions/types'
 import {
   SIDEPANEL_AI_TRIGGERED_EVENT,
@@ -11,6 +12,7 @@ import {
 } from '@/lib/constants/analyticsEvents'
 import { useJtbdPopup } from '@/lib/jtbd-popup/useJtbdPopup'
 import { track } from '@/lib/metrics/track'
+import { useWorkspace } from '@/lib/workspace/use-workspace'
 import { useChatSessionContext } from '../layout/ChatSessionContext'
 import { ChatEmptyState } from './ChatEmptyState'
 import { ChatError } from './ChatError'
@@ -47,6 +49,7 @@ export const Chat = () => {
     onTakeSurvey,
     onDismiss: onDismissJtbdPopup,
   } = useJtbdPopup()
+  const { selectedFolder } = useWorkspace()
 
   const [input, setInput] = useState('')
   const [attachedTabs, setAttachedTabs] = useState<chrome.tabs.Tab[]>([])
@@ -114,6 +117,10 @@ export const Chat = () => {
   const executeMessage = (customMessageText?: string) => {
     const messageText = customMessageText ? customMessageText : input.trim()
     if (!messageText) return
+    if (mode === 'coding' && !selectedFolder) {
+      toast.error('Select a working directory to send coding requests.')
+      return
+    }
 
     recordMessageSent()
 

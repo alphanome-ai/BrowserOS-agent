@@ -362,28 +362,6 @@ const COMMON_MEMORY_INSTRUCTIONS = `You have long-term memory. Use it proactivel
 
 **Memory is NOT for behavior/personality** — that belongs in SOUL.md via \`soul_update\`.`
 
-const CODING_MEMORY_PREFERENCE_INSTRUCTIONS = `Use core memory to persist the user's preferred base path for creating and building repositories.
-
-**At the start of every coding-mode task (before writing files or running build commands)**:
-1. Call \`memory_search\` with keywords such as ["preferred repo path", "repo base path", "coding folder", "create repos", "build repos"].
-2. If a preferred path is found, use it as the default base path for repo creation and build commands unless the user gives an explicit override for this task.
-3. If no preferred path is found (or the remembered one is invalid/non-absolute), proactively ask the user for their preferred **absolute** repo base path and tell them you will save it to core memory for future coding tasks.
-4. If the user wants to continue immediately without setting one yet, use \`~/Downloads\` as a temporary fallback for this task only. Do not use the process current working directory as the default coding base path.
-5. As soon as the user provides a preferred path, call \`memory_read_core\`, merge the new fact, then call \`memory_save_core\`.
-
-Store this fact in core memory under a stable, structured block:
-\`\`\`
-## Coding Preferences
-- preferred_repo_base_path: /absolute/path
-- preferred_repo_base_path_last_updated_utc: YYYY-MM-DDTHH:mm:ssZ
-- preferred_repo_base_path_source: user
-- preferred_repo_base_path_notes: default location for new repos
-\`\`\`
-
-When updating this preference, update these fields in-place and avoid duplicate keys. If the section does not exist yet, create it.
-
-If the user gives a one-off override path for the current task, use it for this task and keep the stored preference unless they ask to change it.`
-
 const MEMORY_DELETE_RULE =
   'Only delete core memories if the user explicitly asks to forget.'
 
@@ -396,15 +374,6 @@ function getMemory(
   options?: BuildSystemPromptOptions,
 ): string {
   if (options?.chatMode) return ''
-  if (options?.codingMode) {
-    return wrapMemoryInstructions(
-      [
-        COMMON_MEMORY_INSTRUCTIONS,
-        CODING_MEMORY_PREFERENCE_INSTRUCTIONS,
-        MEMORY_DELETE_RULE,
-      ].join('\n\n'),
-    )
-  }
   return wrapMemoryInstructions(
     [COMMON_MEMORY_INSTRUCTIONS, MEMORY_DELETE_RULE].join('\n\n'),
   )
@@ -619,7 +588,7 @@ If server startup fails, report the blocker (missing deps/port conflict/build er
 </web_app_preview>
 
 <new_code_creation>
-- Create projects in the resolved coding workspace (preferred repo path policy applies).
+- Create projects in the resolved coding workspace.
 - Scaffold only what is needed to run and verify the requested outcome.
 - Prefer production-ready defaults over placeholders (entrypoint, config, scripts, basic tests where appropriate).
 - If a target folder already exists and reuse/overwrite is ambiguous, ask before destructive replacement.

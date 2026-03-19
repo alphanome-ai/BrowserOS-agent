@@ -22,6 +22,7 @@ interface ChatInputProps {
   input: string
   status: 'streaming' | 'submitted' | 'ready' | 'error'
   mode: ChatMode
+  submitDisabledReason?: string
   onInputChange: (value: string) => void
   onSubmit: (e: FormEvent) => void
   onStop: () => void
@@ -43,6 +44,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       input,
       status,
       mode,
+      submitDisabledReason,
       onInputChange,
       onSubmit: onSubmitProp,
       onStop,
@@ -148,6 +150,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     )
 
     const isBusy = status !== 'ready' && status !== 'error'
+    const isSubmitBlocked = Boolean(submitDisabledReason)
 
     const handleSubmit = (e: FormEvent) => {
       if (mentionStateRef.current.isOpen) {
@@ -156,6 +159,10 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         return
       }
       if (isBusy) {
+        e.preventDefault()
+        return
+      }
+      if (isSubmitBlocked) {
         e.preventDefault()
         return
       }
@@ -235,7 +242,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         !e.nativeEvent.isComposing
       ) {
         e.preventDefault()
-        if (input.trim() && !isBusy) {
+        if (input.trim() && !isBusy && !isSubmitBlocked) {
           e.currentTarget.form?.requestSubmit()
         }
       }
@@ -285,7 +292,9 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             mode === 'chat'
               ? 'Ask about this page...'
               : mode === 'coding'
-                ? 'Ask me to inspect, edit, or debug code...'
+                ? isSubmitBlocked
+                  ? 'Select a working directory to start coding...'
+                  : 'Ask me to inspect, edit, or debug code...'
                 : 'What should I do?'
           }
           rows={1}
@@ -302,8 +311,9 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         ) : (
           <button
             type="submit"
-            disabled={!input.trim()}
+            disabled={!input.trim() || isSubmitBlocked}
             className="absolute right-1.5 bottom-1.5 cursor-pointer rounded-full bg-primary p-2 text-white shadow-sm transition-all duration-200 hover:bg-[var(--accent-orange-bright)] disabled:cursor-not-allowed disabled:opacity-50"
+            title={submitDisabledReason}
           >
             <Send className="h-3.5 w-3.5" />
             <span className="sr-only">Send</span>
