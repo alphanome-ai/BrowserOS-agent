@@ -16,7 +16,6 @@ import {
   MESSAGE_SENT_EVENT,
   PROVIDER_SELECTED_EVENT,
 } from '@/lib/constants/analyticsEvents'
-import { activeConversationStorage } from '@/lib/conversations/activeConversationStorage'
 import {
   conversationStorage,
   useConversations,
@@ -73,7 +72,6 @@ export interface ChatSessionOptions {
 }
 
 const NEWTAB_SYSTEM_PROMPT = `IMPORTANT: The user is chatting from the New Tab page. When performing browser actions, ALWAYS open content in a NEW TAB rather than navigating the current tab. The user's new tab page should remain accessible.`
-const ACTIVE_SNAPSHOT_TTL_MS = 30 * 60 * 1000
 
 export const useChatSession = (options?: ChatSessionOptions) => {
   const {
@@ -352,7 +350,6 @@ export const useChatSession = (options?: ChatSessionOptions) => {
   const [restoredConversationId, setRestoredConversationId] = useState<
     string | null
   >(null)
-  const hasRestoredActiveSnapshotRef = useRef(false)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: restore should only run when query data arrives or conversationIdParam changes
   useEffect(() => {
@@ -396,44 +393,10 @@ export const useChatSession = (options?: ChatSessionOptions) => {
     }
   }, [conversationIdParam, remoteConversationData, isLoggedIn])
 
-  useEffect(() => {
-    if (hasRestoredActiveSnapshotRef.current) return
-    if (conversationIdParam) return
-    if (options?.origin !== 'sidepanel') return
-
-    hasRestoredActiveSnapshotRef.current = true
-
-    const restoreActiveSnapshot = async () => {
-      const snapshot = await activeConversationStorage.getValue()
-      if (!snapshot?.conversationId) return
-      if (Date.now() - snapshot.updatedAt > ACTIVE_SNAPSHOT_TTL_MS) return
-
-      setConversationId(
-        snapshot.conversationId as ReturnType<typeof crypto.randomUUID>,
-      )
-      if (snapshot.messages?.length) {
-        setMessages(snapshot.messages)
-      }
-    }
-
-    restoreActiveSnapshot()
-  }, [conversationIdParam, options?.origin, setMessages])
-
   // Keep messagesRef in sync on every change (cheap ref assignment)
   useEffect(() => {
     messagesRef.current = messages
   }, [messages])
-
-  useEffect(() => {
-    if (options?.origin !== 'sidepanel') return
-
-    const messagesToStore = messages.filter((m) => m.parts?.length > 0)
-    activeConversationStorage.setValue({
-      conversationId: conversationIdRef.current,
-      messages: messagesToStore,
-      updatedAt: Date.now(),
-    })
-  }, [messages, options?.origin])
 
   // Save conversation only after streaming completes — not on every token
   const previousStatusRef = useRef(status)
@@ -524,7 +487,6 @@ export const useChatSession = (options?: ChatSessionOptions) => {
     setDisliked({})
     setRestoredConversationId(null)
     resetRemoteConversation()
-    activeConversationStorage.setValue(null)
   }
 
   const isRestoringConversation =
