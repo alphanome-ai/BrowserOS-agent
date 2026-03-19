@@ -154,7 +154,7 @@ function ensureInitialized(): Promise<CapabilitiesState> {
   return initPromise
 }
 
-function checkFeatureSupport(
+function _checkFeatureSupport(
   state: CapabilitiesState,
   feature: Feature,
 ): boolean {
@@ -200,10 +200,12 @@ export const Capabilities = {
    * Check if a feature is supported.
    * In development mode, all features are enabled.
    */
-  async supports(feature: Feature): Promise<boolean> {
-    if (import.meta.env.DEV) return true
-    const state = await ensureInitialized()
-    return checkFeatureSupport(state, feature)
+  async supports(_feature: Feature): Promise<boolean> {
+    // temp fix
+    return true
+    // if (import.meta.env.DEV) return true
+    // const state = await ensureInitialized()
+    // return checkFeatureSupport(state, feature)
   },
 
   async getBrowserOSVersion(): Promise<string | null> {

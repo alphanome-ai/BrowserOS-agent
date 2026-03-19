@@ -299,10 +299,13 @@ export class ChatService {
     const fallbackDir = path.join(homedir(), 'Downloads')
 
     if (request.mode === 'coding') {
-      const dir = await resolveCodingWorkingDir(
-        request.userWorkingDir,
-        fallbackDir,
-      )
+      if (!request.userWorkingDir) {
+        throw new Error(
+          'Working directory is required when coding mode is selected.',
+        )
+      }
+
+      const dir = await resolveCodingWorkingDir(request.userWorkingDir)
       logger.info('Resolved working directory', {
         mode: request.mode,
         workingDir: dir,

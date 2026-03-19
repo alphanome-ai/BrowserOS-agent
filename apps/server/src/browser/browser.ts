@@ -244,6 +244,19 @@ export class Browser {
     url: string,
     opts?: { hidden?: boolean; background?: boolean; windowId?: number },
   ): Promise<number> {
+    let inheritedGroupId: string | undefined
+    try {
+      const activeResult = await this.cdp.Browser.getActiveTab({
+        ...(opts?.windowId !== undefined && { windowId: opts.windowId }),
+      })
+      const activeTab = activeResult.tab as TabInfo | undefined
+      if (activeTab?.groupId && activeTab.groupId !== '-1') {
+        inheritedGroupId = activeTab.groupId
+      }
+    } catch {
+      // Best-effort inheritance only.
+    }
+
     const createResult = await this.cdp.Browser.createTab({
       url,
       ...(opts?.hidden !== undefined && { hidden: opts.hidden }),
@@ -252,6 +265,21 @@ export class Browser {
     })
 
     const tabId = (createResult.tab as TabInfo).tabId
+    if (inheritedGroupId) {
+      try {
+        await this.cdp.Browser.addTabsToGroup({
+          groupId: inheritedGroupId,
+          tabIds: [tabId],
+        })
+      } catch (error) {
+        logger.warn('Failed to inherit active tab group for new tab', {
+          tabId,
+          groupId: inheritedGroupId,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
+    }
+
     let tabInfo: TabInfo | undefined
     for (let i = 0; i < 10; i++) {
       try {

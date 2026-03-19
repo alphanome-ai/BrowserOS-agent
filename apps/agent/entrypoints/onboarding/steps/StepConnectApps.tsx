@@ -32,6 +32,7 @@ const MORE_APPS = [
   { name: 'Linear' },
   { name: 'Jira' },
   { name: 'Google Docs' },
+  { name: 'Vercel' },
 ]
 
 export const StepConnectApps = ({

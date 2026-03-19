@@ -43,7 +43,7 @@ export const ChatRequestSchema = AgentLLMConfigSchema.extend({
   browserContext: BrowserContextSchema.optional(),
   userSystemPrompt: z.string().optional(),
   isScheduledTask: z.boolean().optional().default(false),
-  userWorkingDir: z.string().min(1).optional(),
+  userWorkingDir: z.string().trim().min(1).optional(),
   supportsImages: z.boolean().optional().default(true),
   mode: z.enum(['chat', 'agent', 'coding']).optional().default('agent'),
   declinedApps: z.array(z.string()).optional(),
@@ -63,6 +63,14 @@ export const ChatRequestSchema = AgentLLMConfigSchema.extend({
       if (!val.trim()) return undefined
       return [{ role: 'user' as const, content: val }]
     }),
+}).superRefine((data, ctx) => {
+  if (data.mode === 'coding' && !data.userWorkingDir) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['userWorkingDir'],
+      message: 'Working directory is required in coding mode.',
+    })
+  }
 })
 
 export type ChatRequest = z.infer<typeof ChatRequestSchema>

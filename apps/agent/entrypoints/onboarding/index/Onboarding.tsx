@@ -19,13 +19,13 @@ export const Onboarding: FC = () => {
     track(ONBOARDING_STARTED_EVENT)
   }, [])
 
-  const handleOpenNewTab = async () => {
-    if (typeof chrome !== 'undefined' && chrome.tabs?.create) {
-      await chrome.tabs.create({ active: true })
-      return
-    }
-    window.open('about:blank', '_blank', 'noopener,noreferrer')
-  }
+  // const handleOpenNewTab = async () => {
+  //   if (typeof chrome !== 'undefined' && chrome.tabs?.create) {
+  //     await chrome.tabs.create({ active: true })
+  //     return
+  //   }
+  //   window.open('about:blank', '_blank', 'noopener,noreferrer')
+  // }
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
@@ -71,14 +71,14 @@ export const Onboarding: FC = () => {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </NavLink>
               </Button>
-              <Button
+              {/* <Button
                 size="lg"
                 variant="outline"
                 onClick={handleOpenNewTab}
                 className="border-border bg-background transition-transform duration-200 hover:scale-105 hover:bg-accent"
               >
                 Open New Tab
-              </Button>
+              </Button> */}
               {/* <Button
                 size="lg"
                 asChild

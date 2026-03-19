@@ -41,7 +41,7 @@ export class Application {
   }
 
   async start(): Promise<void> {
-    logger.info(`Starting BrowserOS Server v${VERSION}`)
+    logger.info(`Starting Fouwser Server v${VERSION}`)
     logger.debug('Directory config', {
       executionDir: path.resolve(this.config.executionDir),
       resourcesDir: path.resolve(this.config.resourcesDir),
@@ -138,7 +138,7 @@ export class Application {
 
     const dbPath = path.join(
       this.config.executionDir || this.config.resourcesDir,
-      'browseros.db',
+      'fouwser.db',
     )
     this.db = initializeDb(dbPath)
 
@@ -148,7 +148,7 @@ export class Application {
     })
 
     const browserosId = identity.getBrowserOSId()
-    logger.info('BrowserOS ID initialized', {
+    logger.info('Fouwser ID initialized', {
       browserosId: browserosId.slice(0, 12),
       fromConfig: !!this.config.instanceInstallId,
     })

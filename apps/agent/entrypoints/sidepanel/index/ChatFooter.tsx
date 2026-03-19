@@ -76,12 +76,29 @@ export const ChatFooter: FC<ChatFooterProps> = ({
       (i) => i.name === s.managedServerName,
     )?.is_authenticated
   })
+  const isCodingWithoutWorkspace = mode === 'coding' && !selectedFolder
 
   return (
     <footer className="border-border/40 border-t bg-background/80 backdrop-blur-md">
       <ChatAttachedTabs tabs={attachedTabs} onRemoveTab={onRemoveTab} />
 
       <div className="p-3">
+        {supports(Feature.WORKSPACE_FOLDER_SUPPORT) && selectedFolder && (
+          <div
+            className="mb-2 flex items-center gap-1.5 text-muted-foreground text-xs"
+            title={`Working directory: ${selectedFolder.path}`}
+          >
+            <Folder className="h-3.5 w-3.5 shrink-0" />
+            {/* <span className="shrink-0 font-medium">Working dir:</span> */}
+            <span className="min-w-0 truncate">{selectedFolder.path}</span>
+          </div>
+        )}
+        {isCodingWithoutWorkspace && (
+          <div className="mb-2 text-destructive text-xs">
+            Select a workspace folder to use Coding mode.
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center gap-2">
           <div className="order-1 ml-auto flex items-center gap-1 sm:order-2 sm:ml-0">
             <button
@@ -176,6 +193,11 @@ export const ChatFooter: FC<ChatFooterProps> = ({
           input={input}
           status={status}
           mode={mode}
+          submitDisabledReason={
+            isCodingWithoutWorkspace
+              ? 'Select a working directory to send coding requests.'
+              : undefined
+          }
           onInputChange={onInputChange}
           onSubmit={onSubmit}
           onStop={onStop}

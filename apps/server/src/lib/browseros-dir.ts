@@ -32,6 +32,12 @@ export async function ensureBrowserosDir(): Promise<void> {
   await mkdir(getMemoryDir(), { recursive: true })
   await mkdir(getSkillsDir(), { recursive: true })
   await mkdir(getSessionsDir(), { recursive: true })
+
+  const coreMemoryPath = getCoreMemoryPath()
+  const coreMemoryFile = Bun.file(coreMemoryPath)
+  if (!(await coreMemoryFile.exists())) {
+    await Bun.write(coreMemoryPath, '')
+  }
 }
 
 export async function cleanOldSessions(): Promise<void> {

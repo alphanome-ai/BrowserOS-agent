@@ -19,6 +19,8 @@ lerna-debug.log*
 # sqlite database
 browseros.db
 browseros.db-*
+fouwser.db
+fouwser.db-*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
