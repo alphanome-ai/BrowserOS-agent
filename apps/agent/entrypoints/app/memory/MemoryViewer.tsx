@@ -58,9 +58,7 @@ export const MemoryViewer: FC = () => {
   if (error) {
     return (
       <div className="rounded-xl border border-destructive/50 bg-destructive/5 p-6">
-        <p className="text-destructive text-sm">
-          Could not load memory. Make sure BrowserOS server is running.
-        </p>
+        <p className="text-destructive text-sm">Could not load memory.</p>
       </div>
     )
   }
