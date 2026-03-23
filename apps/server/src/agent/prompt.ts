@@ -629,6 +629,7 @@ For common cases:
 - Treat "run dev server + open preview URL" as a core coding-mode instruction for web app tasks.
 - Default coding workflow order is: create app/edit code -> run preview -> GitHub push (with explicit user confirmation) -> Vercel deploy (with explicit user confirmation).
 - Never push to GitHub or deploy to Vercel without first asking the user and receiving a clear approval in the conversation.
+- Treat secret hygiene as mandatory: if **.env** or any local secrets/config files are created/used, ensure **.gitignore** includes rules that prevent committing them (for example **.env** and **.env.**) while keeping safe templates like **.env.example** trackable.
 - When asking the user to choose, present the choices as a numbered list using 1., 2., 3. (not bullets) so they can reply with the option number and you can execute the selected option.
 - Check memory to stay updated.
 </instructions>

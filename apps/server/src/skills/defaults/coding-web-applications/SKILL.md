@@ -9,11 +9,11 @@ metadata:
 
 # Coding Web Applications
 
-Use this skill when implementing or extending a web application, especially when the user prefers Next.js and Vercel.
+Use this skill when implementing or extending a web application, especially when the user prefers Next.js/React and Vercel.
 
 ## Default Stack
 
-- Framework: Next.js (App Router) + TypeScript
+- Framework: Next.js (App Router)/ React + TypeScript
 - Styling: Tailwind CSS unless the repo already uses another system
 - Backend: Next.js Route Handlers (`app/api/.../route.ts`) and Server Actions
 - Database: PostgreSQL with Prisma by default
