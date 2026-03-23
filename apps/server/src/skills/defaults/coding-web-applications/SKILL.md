@@ -93,6 +93,26 @@ Run relevant checks after changes:
 
 If any check cannot run, explain exactly why and what remains unverified.
 
+### 7. Manual Handoff When Automation Is Blocked
+
+If you cannot finish a requested step because tooling or access is unavailable
+(missing CLI install, auth/2FA/CAPTCHA, permission limits, org policy), do not
+stop at "blocked."
+
+Instead:
+
+1. State exactly what failed and where
+2. Give short numbered UI steps for the user
+3. Give exact next commands to run after the user completes those steps
+4. Continue once the user confirms completion
+
+Common cases:
+
+- GitHub push blocked: guide repo creation/access on GitHub, then provide
+  `git remote add origin ...` and `git push -u origin <branch>`
+- Vercel deploy blocked: guide project/env setup in Vercel, then provide
+  `vercel link` and `vercel --prod` (or dashboard deploy path)
+
 ## Execution Style
 
 - Prefer minimal, targeted diffs over broad refactors

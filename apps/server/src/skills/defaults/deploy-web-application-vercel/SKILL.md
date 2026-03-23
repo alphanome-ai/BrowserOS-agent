@@ -111,6 +111,26 @@ If production issues appear:
 
 Always provide the exact rollback action used.
 
+### 8. Manual Handoff for Access/Install Blockers
+
+If deployment cannot be completed automatically because of missing install/auth/access
+(for example `vercel` CLI missing, Vercel login/org restrictions, GitHub repo permissions),
+switch to a guided handoff instead of stopping.
+
+Required handoff format:
+
+1. Name the exact blocker and failed step
+2. Provide short numbered UI steps in Vercel/GitHub
+3. Provide exact follow-up CLI commands
+4. Ask user to confirm completion, then resume from that checkpoint
+
+Typical command follow-up:
+
+- `vercel login` / `vercel link`
+- `vercel env add ...`
+- `vercel --prod`
+- `git remote add origin ...` and `git push -u origin <branch>`
+
 ## Expected Handoff
 
 Provide:
