@@ -49,16 +49,18 @@ export const CODING_SUGGESTIONS: Suggestion[] = [
   {
     display: 'Build a personal productivity web app',
     prompt:
-      // 'Build a modern, fast, production-ready personal productivity SaaS web app (Notion/TickTick/Todoist quality) using Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, lucide-react, React hooks + Server Actions, and Prisma with Vercel Postgres (or SQLite fallback), plus NextAuth (email + Google). Include dashboard insights, task management (priority, due dates, drag-drop, completion), habits with streaks and heatmap, goals with milestones/progress, rich notes with tags/search, and a Pomodoro timer with session tracking; make it fully responsive, animated, dark/light mode, accessible, SEO-ready, and Vercel zero-config deployable. Use a clean /app /components /lib /db /actions architecture with server components by default, loading skeletons, error boundaries, code splitting, env support, sample seed data, Prisma schema, and a README with Vercel deploy steps; then run the dev server and open/share the preview URL.',
-      'Build a simple landing page for a toy store as a SPA using react js, use vite.',
+      'Build a modern, production-ready personal productivity SaaS web app (Notion quality) using React.js, Tailwind CSS. Include dashboard insights, task management (priority, due dates, drag-drop, completion), habits with streaks and heatmap, goals with milestones/progress, rich notes with tags/search, and a Pomodoro timer with session tracking; make it fully responsive, animated, dark/light mode, and Vercel zero-config deployable. Make sure to start the dev server and open/share the preview URL once the app is ready.',
     icon: '📊',
   },
-  // {
-  //   display: 'Trace this error',
-  //   prompt:
-  //     'Find the code path causing this bug and suggest a focused patch with validation steps',
-  //   icon: '🛠️',
-  // },
+  {
+    display: 'Build a landing page for Fouwser',
+    prompt: `
+      Act as a senior conversion copywriter and UX strategist. Create a high-converting landing page framework for my app-building, agentic, founder-friendly browser - Fouwser.
+      Our target audience is non-technical founders, small business owners, enterprise managers who struggle with high development costs, slow time-to-market, technical complexity.
+      Use React as the tech stack.
+      `,
+    icon: '🛠️',
+  },
   // {
   //   display: 'Refactor safely',
   //   prompt:
